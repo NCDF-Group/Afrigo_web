@@ -20,11 +20,16 @@ export async function POST(request: Request) {
       const companyId=exporter.data()?.companyId,company=companyId?await db.collection('companies').doc(companyId).get():null
       if (!exporter.exists || exporter.data()?.role !== 'Exporter' || (exporter.data()?.kycStatus!=='verified' && exporter.data()?.verificationStatus!=='verified' && company?.data()?.kycStatus!=='verified')) return Response.json({ ok: false, error: 'Verified Exporter not found' }, { status: 404 })
       const shipment = db.collection('shipments').doc()
-      await db.runTransaction(async transaction => { transaction.update(contractRef, { exporterId, status: 'shipping', updatedAt: now }); transaction.set(shipment, { contractId: contract.id, buyerId: data.buyerId, supplierId: data.supplierId, exporterId, status: 'Assigned', progress: 5, createdAt: now, updatedAt: now }) })
+      const conversation=db.collection('conversations').doc(contract.id),participantIds=[data.buyerId,data.supplierId,exporterId].filter(Boolean)
+      await db.runTransaction(async transaction => { transaction.update(contractRef, { exporterId, status: 'shipping', updatedAt: now }); transaction.set(shipment, { contractId: contract.id, buyerId: data.buyerId, supplierId: data.supplierId, exporterId, status: 'Assigned', progress: 5, createdAt: now, updatedAt: now });transaction.set(conversation,{contractId:contract.id,participantIds,updatedAt:now},{merge:true}) })
+    } else if (action === 'open-chat') {
+      const participantIds=[data.buyerId,data.supplierId,data.exporterId].filter(Boolean)
+      await db.collection('conversations').doc(contract.id).set({contractId:contract.id,participantIds,createdAt:data?.createdAt||now,updatedAt:now},{merge:true})
     } else if (action === 'message') {
       const message = String(input.message || '').trim().slice(0, 2000)
       if (!message) return Response.json({ ok: false, error: 'Message is required' }, { status: 400 })
-      await db.collection('messages').add({ contractId: contract.id, senderId: user.id, recipientIds: [data.buyerId, data.supplierId, data.exporterId].filter(Boolean).filter((id: string) => id !== user.id), message, createdAt: now })
+      const participantIds=[data.buyerId,data.supplierId,data.exporterId].filter(Boolean),conversation=db.collection('conversations').doc(contract.id),messageRef=conversation.collection('messages').doc()
+      await db.runTransaction(async transaction=>{transaction.set(conversation,{contractId:contract.id,participantIds,lastMessage:message,lastSenderId:user.id,lastMessageAt:now,updatedAt:now},{merge:true});transaction.set(messageRef,{contractId:contract.id,senderId:user.id,senderName:user.user_metadata.display_name||user.email,senderRole:user.user_metadata.role,message,createdAt:now})})
     } else return Response.json({ ok: false, error: 'Action is not allowed in the current state' }, { status: 409 })
     await db.collection('activityLogs').add({ actorId: user.id, type: 'action_click', label: `${action} contract`, detail: contract.id, role: user.user_metadata.role, createdAt: now })
     return Response.json({ ok: true })
