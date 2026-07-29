@@ -9,7 +9,7 @@ export async function POST(request: Request) {
     const { contractId } = await request.json()
     const contract = await admin.db.collection('contracts').doc(String(contractId || '')).get()
     if (!contract.exists || contract.data()?.buyerId !== user.id) return Response.json({ ok: false, error: 'Contract not found' }, { status: 404 })
-    if (contract.data()?.status !== 'pending') return Response.json({ ok: false, error: 'This contract is not awaiting payment' }, { status: 409 })
+    if (contract.data()?.status !== 'accepted' || contract.data()?.paymentStatus === 'paid') return Response.json({ ok: false, error: 'This contract must be accepted by the Seller before payment' }, { status: 409 })
     const amount = Number(contract.data()?.amount), currency = String(contract.data()?.currency || 'NGN')
     if (!Number.isFinite(amount) || amount <= 0) return Response.json({ ok: false, error: 'Contract amount is invalid' }, { status: 409 })
     const secret = process.env.PAYSTACK_SECRET_KEY

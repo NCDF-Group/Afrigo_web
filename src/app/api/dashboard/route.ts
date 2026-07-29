@@ -18,10 +18,11 @@ export async function GET(request: Request) {
       for(let index=0;index<rfqs.length;index+=30){const ids=rfqs.slice(index,index+30).map(rfq=>rfq.id);if(ids.length){const bidSnapshot=await db.collection('bids').where('rfqId','in',ids).limit(300).get();bids.push(...rows(bidSnapshot).map((bid:any)=>({...bid,rfqTitle:titleById.get(bid.rfqId)})))}}
       const contracts = await db.collection('contracts').where('buyerId', '==', user.id).limit(100).get()
       const shipments = await db.collection('shipments').where('buyerId', '==', user.id).limit(100).get()
+      const marketplace = await db.collection('lots').where('status', '==', 'active').limit(100).get()
       const exportersSnapshot = await db.collection('users').where('role', '==', 'Exporter').limit(100).get()
       const exporters:any[]=[]
       for(const item of rows(exportersSnapshot) as any[]){const company=item.companyId?await db.collection('companies').doc(item.companyId).get():null;if(item.kycStatus==='verified'||item.verificationStatus==='verified'||company?.data()?.kycStatus==='verified')exporters.push({id:item.id,displayName:item.displayName||company?.data()?.name||'Verified Exporter',country:item.country||company?.data()?.country||''})}
-      return Response.json({ ok: true, role, rfqs, bids, contracts: rows(contracts), shipments: rows(shipments), exporters })
+      return Response.json({ ok: true, role, rfqs, bids, contracts: rows(contracts), shipments: rows(shipments), marketplace: rows(marketplace).filter((item:any)=>item.ownerId!==user.id), exporters })
     }
 
     if (role === 'Seller') {
