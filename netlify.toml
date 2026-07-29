@@ -5,6 +5,8 @@
 [build.environment]
   NODE_VERSION = "20"
   NEXT_TELEMETRY_DISABLED = "1"
+  # Firebase Web API keys are public identifiers and are bundled into browser code by design.
+  SECRETS_SCAN_OMIT_KEYS = "NEXT_PUBLIC_FIREBASE_API_KEY"
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"
