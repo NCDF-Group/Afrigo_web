@@ -10,5 +10,5 @@ export const STAFF_CAPABILITIES={
   super_admin:['*']
 } satisfies Record<StaffRole,string[]>
 
-export const OWNER_EMAIL=(process.env.SUPER_ADMIN_EMAIL||'ukwun97@gmail.com').trim().toLowerCase()
+export const OWNER_EMAIL='ukwun97@gmail.com'
 export function hasCapability(role:StaffRole,capability:string){const values=STAFF_CAPABILITIES[role] as readonly string[];return values.includes('*')||values.includes(capability)}
