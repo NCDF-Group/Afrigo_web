@@ -5,6 +5,23 @@ import { sendTransactionalEmail } from '@/lib/transactionalEmail'
 
 const clean=(value:unknown,max=2000)=>String(value||'').trim().slice(0,max)
 const safeId=(value:unknown)=>clean(value,180).replace(/[^a-zA-Z0-9_-]/g,'')
+const millis=(value:any)=>typeof value?.toMillis==='function'?value.toMillis():value instanceof Date?value.getTime():0
+
+export async function GET(request:Request){
+ try{
+  const{user,admin}=await requireUser(request),url=new URL(request.url),conversationId=safeId(url.searchParams.get('conversationId'))
+  if(conversationId){
+   const ref=admin.db.collection('conversations').doc(conversationId),snapshot=await ref.get(),data=snapshot.data()
+   if(!snapshot.exists||!data?.participantIds?.includes(user.id))return Response.json({ok:false,error:'Conversation access denied'},{status:403})
+   const messages=await ref.collection('messages').orderBy('createdAt','asc').limit(150).get()
+   const timestamps=(map:any)=>Object.fromEntries(Object.entries(map&&typeof map==='object'?map:{}).map(([key,value]:any)=>[key,millis(value?.expiresAt||value)]))
+   return Response.json({ok:true,conversation:{id:snapshot.id,title:data.title||'Conversation',typing:timestamps(data.typing),readAtBy:timestamps(data.readAtBy)},messages:messages.docs.map((item:any)=>({id:item.id,...item.data(),createdAt:millis(item.data().createdAt)}))})
+  }
+  const snapshot=await admin.db.collection('conversations').where('participantIds','array-contains',user.id).limit(100).get()
+  const conversations=snapshot.docs.map((item:any)=>{const data=item.data();return{id:item.id,title:data.title||'Conversation',lastMessage:data.lastMessage||'',lastSenderId:data.lastSenderId||'',lastMessageAt:millis(data.lastMessageAt),readAt:millis(data.readAtBy?.[user.id]),archived:Boolean(data.archivedBy?.[user.id])}}).sort((a:any,b:any)=>b.lastMessageAt-a.lastMessageAt)
+  return Response.json({ok:true,conversations})
+ }catch(error){return jsonError(error)}
+}
 
 async function notify(admin:any,participantIds:string[],senderId:string,senderName:string,preview:string,conversationId:string){
   const recipients=participantIds.filter(id=>id!==senderId)
