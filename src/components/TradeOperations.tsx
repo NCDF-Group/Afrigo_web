@@ -6,6 +6,8 @@ import type { Role } from '@/lib/roles'
 import ContractChat from './ContractChat'
 import ChatInbox from './ChatInbox'
 import MessagingBoundary from './MessagingBoundary'
+import SellerPayoutPanel from './SellerPayoutPanel'
+import TradeJourney from './TradeJourney'
 const MotionSection = motion.section as any
 const button='rounded-xl border border-[var(--afrigo-border)] px-3 py-2 text-sm font-semibold transition hover:-translate-y-0.5 hover:border-[var(--afrigo-primary-green)] disabled:opacity-40'
 
@@ -28,10 +30,12 @@ export default function TradeOperations({role}:{role:Role}){
  const marketplacePanel=role==='Buyer'?<div className="mt-7"><div><h3 className="font-bold">Live Seller marketplace</h3><p className="text-xs text-slate-500">Inventory is reserved transactionally when you create a purchase.</p></div><div className="mt-3 grid gap-3 sm:grid-cols-2">{(data?.marketplace||[]).map((item:any)=><div key={item.id} className="rounded-2xl border bg-white p-4 transition hover:-translate-y-0.5 hover:shadow-lg"><div className="flex justify-between gap-3"><span className="font-bold">{item.title}</span><span className="text-sm font-semibold">{item.currency||'NGN'} {Number(item.price).toLocaleString()}/{item.unit||'unit'}</span></div><p className="mt-1 text-sm text-slate-500">{Number(item.quantity).toLocaleString()} {item.unit||'units'} available {item.origin?`· ${item.origin}`:''}</p><button disabled={!!busy} onClick={()=>void purchase(item)} className={`${button} mt-3 bg-[var(--afrigo-primary-green)] text-white`}>Reserve and purchase</button></div>)}{!(data?.marketplace||[]).length&&<p className="text-sm text-slate-500">No Seller inventory is currently available.</p>}</div></div>:null
  if(error&&!data)return <div className="rounded-2xl border border-red-200 bg-red-50 p-4 text-sm text-red-700">{error}</div>
  return <MotionSection initial={{opacity:0,y:18}} animate={{opacity:1,y:0}} className="rounded-3xl border border-[var(--afrigo-border)] bg-white p-5 shadow-xl sm:p-8">
-  <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between"><div><p className="text-xs font-bold uppercase tracking-[.2em] text-[var(--afrigo-secondary-gold)]">Live operations</p><h2 className="mt-2 text-2xl font-black text-[var(--afrigo-primary-green)]">{role} workspace records</h2></div><div className="flex gap-2">{role==='Seller'&&<button onClick={settle} className={button}>Set payout account</button>}{(role==='Buyer'||role==='Seller')&&<input value={search} onChange={e=>{setSearch(e.target.value);setPage(0)}} placeholder="Search RFQs" className="min-w-0 rounded-xl border px-4 py-2"/>}</div></div>
+  <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between"><div><p className="text-xs font-bold uppercase tracking-[.2em] text-[var(--afrigo-secondary-gold)]">Live operations</p><h2 className="mt-2 text-2xl font-black text-[var(--afrigo-primary-green)]">{role} workspace records</h2></div><div className="flex gap-2">{(role==='Buyer'||role==='Seller')&&<input value={search} onChange={e=>{setSearch(e.target.value);setPage(0)}} placeholder="Search RFQs" className="min-w-0 rounded-xl border px-4 py-2"/>}</div></div>
   {error&&<p className="mt-4 rounded-xl bg-red-50 p-3 text-sm text-red-700">{error}</p>}
   {notice&&<p className="mt-4 rounded-xl bg-emerald-50 p-3 text-sm text-emerald-800">{notice}</p>}
   <MessagingBoundary><ChatInbox/></MessagingBoundary>
+  <TradeJourney role={role}/>
+  {role==='Seller'&&<SellerPayoutPanel data={data} reload={load}/>}
   {sellerInquiryPanel}
   {marketplacePanel}
   {role==='Seller'&&data?.metrics&&<div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4">{[['Bids',data.metrics.totalBids],['Win rate',`${data.metrics.winRate}%`],['Completed',data.metrics.completedContracts],['Verified revenue',Number(data.metrics.revenue).toLocaleString()]].map(([label,value])=><div key={String(label)} className="rounded-2xl bg-[var(--afrigo-bg)] p-4"><p className="text-xs text-[var(--afrigo-text-secondary)]">{label}</p><p className="mt-1 text-xl font-black text-[var(--afrigo-primary-green)]">{value}</p></div>)}</div>}

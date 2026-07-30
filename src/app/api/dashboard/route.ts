@@ -6,7 +6,7 @@ const rows = (snapshot: QuerySnapshot) => snapshot.docs.map(document => ({ id: d
 
 export async function GET(request: Request) {
   try {
-    const { user, admin } = await requireUser(request)
+    const { user, admin, profile } = await requireUser(request)
     const role = user.user_metadata.role
     const db = admin.db
 
@@ -36,9 +36,10 @@ export async function GET(request: Request) {
       const completed = contractRows.filter(item => item.status === 'completed' && item.paymentStatus === 'paid')
       const won = bidRows.filter(item => item.status === 'Awarded').length
       const payouts = await db.collection('payouts').where('sellerId', '==', user.id).limit(100).get()
+      const payoutRequests = await db.collection('payoutRequests').where('sellerId', '==', user.id).limit(100).get()
       const payoutRows:any[] = rows(payouts)
       const metrics = { totalBids:bidRows.length, winRate:bidRows.length ? Math.round((won/bidRows.length)*100) : 0, revenue:completed.reduce((sum,item)=>sum+Number(item.amount||0),0), completedContracts:completed.length, paidOut:payoutRows.filter(item=>item.status==='success').reduce((sum,item)=>sum+Number(item.amount||0),0) }
-      return Response.json({ ok: true, role, lots: rows(lots), rfqs: rows(rfqs), bids: bidRows, contracts: contractRows, payouts:payoutRows, metrics })
+      return Response.json({ ok: true, role, lots: rows(lots), rfqs: rows(rfqs), bids: bidRows, contracts: contractRows, payouts:payoutRows, payoutRequests:rows(payoutRequests), settlement:profile?.settlement?{accountLast4:profile.settlement.accountLast4,bankCode:profile.settlement.bankCode,verified:Boolean(profile.settlement.recipientCode)}:null, metrics })
     }
 
     if (role === 'Exporter') {
