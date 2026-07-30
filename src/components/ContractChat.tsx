@@ -1,30 +1,95 @@
 'use client'
 import { useEffect,useRef,useState } from 'react'
 import { deleteField,doc,Timestamp,updateDoc } from 'firebase/firestore'
-import { motion } from 'framer-motion'
 import { authenticatedFetch } from '@/lib/apiClient'
 import { firebaseAuth,firebaseDb } from '@/lib/firebaseClient'
-const MotionDiv=motion.div as any
-type Message={id:string;type?:string;senderId:string;senderName:string;senderRole:string;message:string;fileName?:string;fileSize?:number;createdAt?:any}
+
+type Message={id:string;type?:string;senderId:string;senderName:string;senderRole:string;message:string;fileName?:string;fileSize?:number;createdAt?:number}
 export type ChatTarget={id:string;title:string}
 
 export default function ContractChat({conversation,onClose}:{conversation:ChatTarget;onClose:()=>void}){
- const[messages,setMessages]=useState<Message[]>([]),[metadata,setMetadata]=useState<any>({}),[text,setText]=useState(''),[error,setError]=useState(''),[ready,setReady]=useState(false),[sending,setSending]=useState(false),bottom=useRef<HTMLDivElement>(null),typingTimer=useRef<any>(null),fileRef=useRef<HTMLInputElement>(null)
+ const[messages,setMessages]=useState<Message[]>([])
+ const[metadata,setMetadata]=useState<any>({})
+ const[text,setText]=useState('')
+ const[error,setError]=useState('')
+ const[ready,setReady]=useState(false)
+ const[sending,setSending]=useState(false)
+ const bottom=useRef<HTMLDivElement>(null)
+ const typingTimer=useRef<ReturnType<typeof setTimeout>|null>(null)
+ const fileRef=useRef<HTMLInputElement>(null)
  const uid=firebaseAuth?.currentUser?.uid||''
- useEffect(()=>{let active=true;const load=async()=>{try{const result=await authenticatedFetch(`/api/conversations?conversationId=${encodeURIComponent(conversation.id)}`);if(active){setMetadata(result.conversation||{});setMessages(result.messages||[]);setReady(true)}}catch(cause:any){if(active)setError(cause.message)}};void load();void authenticatedFetch('/api/conversations',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'mark-read',conversationId:conversation.id})}).catch(cause=>setError(cause.message));const timer=window.setInterval(()=>void load(),1500);return()=>{active=false;window.clearInterval(timer);clearTimeout(typingTimer.current)}},[conversation.id])
- useEffect(()=>bottom.current?.scrollIntoView({behavior:'smooth'}),[messages.length])
- const announceTyping=()=>{if(!firebaseDb||!uid)return;const ref=doc(firebaseDb,'conversations',conversation.id);void updateDoc(ref,{[`typing.${uid}`]:{name:firebaseAuth?.currentUser?.displayName||'Someone',expiresAt:Timestamp.fromMillis(Date.now()+5000)}}).catch(()=>{});clearTimeout(typingTimer.current);typingTimer.current=setTimeout(()=>void updateDoc(ref,{[`typing.${uid}`]:deleteField()}).catch(()=>{}),2500)}
- const send=async(event:React.FormEvent)=>{event.preventDefault();const message=text.trim();if(!message)return;setSending(true);setError('');try{await authenticatedFetch('/api/conversations',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'message',conversationId:conversation.id,message})});setText('')}catch(cause:any){setError(cause.message)}finally{setSending(false)}}
- const attach=async(file?:File)=>{if(!file)return;setSending(true);setError('');try{const form=new FormData();form.set('conversationId',conversation.id);form.set('file',file);await authenticatedFetch('/api/conversations/attachment',{method:'POST',body:form})}catch(cause:any){setError(cause.message)}finally{setSending(false);if(fileRef.current)fileRef.current.value=''}}
- const openAttachment=async(messageId:string)=>{try{const user=firebaseAuth?.currentUser;if(!user)throw new Error('Sign in again');const token=await user.getIdToken();const response=await fetch(`/api/conversations/attachment?conversationId=${encodeURIComponent(conversation.id)}&messageId=${encodeURIComponent(messageId)}`,{headers:{Authorization:`Bearer ${token}`}});if(!response.ok)throw new Error((await response.json()).error||'Attachment unavailable');location.assign(response.url)}catch(cause:any){setError(cause.message)}}
+
+ useEffect(()=>{
+  let active=true
+  const load=async()=>{
+   try{
+    const result=await authenticatedFetch(`/api/conversations?conversationId=${encodeURIComponent(conversation.id)}`)
+    if(active){setMetadata(result.conversation||{});setMessages(result.messages||[]);setReady(true)}
+   }catch(cause:any){if(active)setError(cause.message)}
+  }
+  void load()
+  void authenticatedFetch('/api/conversations',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'mark-read',conversationId:conversation.id})}).catch(cause=>setError(cause.message))
+  const timer=window.setInterval(()=>void load(),1500)
+  return()=>{
+   active=false
+   window.clearInterval(timer)
+   if(typingTimer.current)clearTimeout(typingTimer.current)
+  }
+ },[conversation.id])
+
+ useEffect(()=>{
+  bottom.current?.scrollIntoView({behavior:'smooth'})
+ },[messages.length])
+
+ const announceTyping=()=>{
+  if(!firebaseDb||!uid)return
+  const ref=doc(firebaseDb,'conversations',conversation.id)
+  void updateDoc(ref,{[`typing.${uid}`]:{name:firebaseAuth?.currentUser?.displayName||'Someone',expiresAt:Timestamp.fromMillis(Date.now()+5000)}}).catch(()=>{})
+  if(typingTimer.current)clearTimeout(typingTimer.current)
+  typingTimer.current=setTimeout(()=>void updateDoc(ref,{[`typing.${uid}`]:deleteField()}).catch(()=>{}),2500)
+ }
+ const send=async(event:React.FormEvent)=>{
+  event.preventDefault()
+  const message=text.trim()
+  if(!message)return
+  setSending(true);setError('')
+  try{await authenticatedFetch('/api/conversations',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'message',conversationId:conversation.id,message})});setText('')}
+  catch(cause:any){setError(cause.message)}
+  finally{setSending(false)}
+ }
+ const attach=async(file?:File)=>{
+  if(!file)return
+  setSending(true);setError('')
+  try{const form=new FormData();form.set('conversationId',conversation.id);form.set('file',file);await authenticatedFetch('/api/conversations/attachment',{method:'POST',body:form})}
+  catch(cause:any){setError(cause.message)}
+  finally{setSending(false);if(fileRef.current)fileRef.current.value=''}
+ }
+ const openAttachment=async(messageId:string)=>{
+  try{
+   const user=firebaseAuth?.currentUser
+   if(!user)throw new Error('Sign in again')
+   const token=await user.getIdToken(),response=await fetch(`/api/conversations/attachment?conversationId=${encodeURIComponent(conversation.id)}&messageId=${encodeURIComponent(messageId)}`,{headers:{Authorization:`Bearer ${token}`}})
+   if(!response.ok)throw new Error((await response.json()).error||'Attachment unavailable')
+   location.assign(response.url)
+  }catch(cause:any){setError(cause.message)}
+ }
  const typing=metadata.typing&&typeof metadata.typing==='object'&&!Array.isArray(metadata.typing)?metadata.typing:{}
  const receipts=metadata.readAtBy&&typeof metadata.readAtBy==='object'&&!Array.isArray(metadata.readAtBy)?metadata.readAtBy:{}
- const othersTyping=Object.entries(typing).filter(([id,value]:any)=>id!==uid&&Number(value)>Date.now()).map(()=>'Someone')
- const readAt=Object.entries(receipts).filter(([id])=>id!==uid).map(([,value]:any)=>Number(value)||0)
- return <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/45 p-0 backdrop-blur-sm sm:items-center sm:p-6" role="dialog" aria-modal="true" aria-label={conversation.title}><MotionDiv initial={{opacity:0,y:30,scale:.98}} animate={{opacity:1,y:0,scale:1}} className="flex h-[88vh] w-full max-w-2xl flex-col overflow-hidden rounded-t-[2rem] bg-white shadow-2xl sm:h-[76vh] sm:rounded-[2rem]">
-  <header className="flex items-center justify-between border-b bg-[var(--afrigo-primary-green)] p-5 text-white"><div><p className="text-xs font-bold uppercase tracking-[.18em] text-white/70">Secure live conversation</p><h2 className="mt-1 text-lg font-black">{conversation.title}</h2></div><button onClick={onClose} aria-label="Close chat" className="rounded-full bg-white/15 px-3 py-2 text-lg transition hover:bg-white/25">×</button></header>
-  <div className="flex-1 space-y-3 overflow-y-auto bg-slate-50 p-4 sm:p-6">{!ready&&!error&&<p className="text-center text-sm text-slate-500">Connecting securely…</p>}{ready&&!messages.length&&<div className="mx-auto mt-12 max-w-sm text-center"><p className="text-3xl">💬</p><p className="mt-3 font-bold text-slate-800">Start the conversation</p><p className="mt-1 text-sm text-slate-500">Messages are delivered in real time only to verified participants.</p></div>}{messages.map(item=>{const mine=item.senderId===uid,created=item.createdAt?.toMillis?.()||0,seen=mine&&readAt.some(value=>value>=created);return <MotionDiv initial={{opacity:0,y:8}} animate={{opacity:1,y:0}} key={item.id} className={`flex ${mine?'justify-end':'justify-start'}`}><div className={`max-w-[85%] rounded-2xl px-4 py-3 shadow-sm ${mine?'rounded-br-md bg-[var(--afrigo-primary-green)] text-white':'rounded-bl-md border bg-white text-slate-900'}`}><div className={`mb-1 flex gap-2 text-[11px] font-bold ${mine?'text-white/70':'text-slate-500'}`}><span>{mine?'You':item.senderName||item.senderRole}</span><span>{item.senderRole}</span></div>{item.type==='attachment'?<button onClick={()=>openAttachment(item.id)} className="flex items-center gap-2 text-left text-sm font-semibold underline underline-offset-2">📎 {item.fileName||item.message}<span className="text-[10px] opacity-70">{item.fileSize?`${Math.ceil(item.fileSize/1024)} KB`:''}</span></button>:<p className="whitespace-pre-wrap break-words text-sm">{item.message}</p>}<p className={`mt-1 text-right text-[10px] ${mine?'text-white/60':'text-slate-400'}`}>{item.createdAt?.toDate?.()?.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})||'Sending…'}{mine&&created?` · ${seen?'Read':'Delivered'}`:''}</p></div></MotionDiv>})}<div ref={bottom}/></div>
-  <div className="min-h-6 border-t bg-white px-5 pt-1 text-xs font-medium text-[var(--afrigo-primary-green)]">{othersTyping.length?`${othersTyping.join(', ')} ${othersTyping.length===1?'is':'are'} typing…`:''}</div>
-  {error&&<p role="alert" className="bg-red-50 px-5 py-2 text-sm text-red-700">{error}</p>}<form onSubmit={send} className="flex items-end gap-2 bg-white p-3 pt-1 sm:p-4 sm:pt-1"><input ref={fileRef} type="file" accept=".pdf,image/jpeg,image/png,image/webp" className="hidden" onChange={event=>void attach(event.target.files?.[0])}/><button type="button" onClick={()=>fileRef.current?.click()} disabled={sending} title="Attach a file" aria-label="Attach a file" className="h-12 rounded-2xl border px-4 text-xl transition hover:bg-slate-50">📎</button><textarea required rows={1} maxLength={2000} value={text} onChange={event=>{setText(event.target.value);announceTyping()}} onKeyDown={event=>{if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();event.currentTarget.form?.requestSubmit()}}} placeholder="Write a message…" className="max-h-28 min-h-12 flex-1 resize-none rounded-2xl border bg-slate-50 px-4 py-3 outline-none focus:border-[var(--afrigo-primary-green)]"/><button disabled={sending||!text.trim()} className="h-12 rounded-2xl bg-[var(--afrigo-primary-green)] px-5 font-bold text-white transition hover:-translate-y-0.5 disabled:opacity-50">{sending?'…':'Send'}</button></form>
- </MotionDiv></div>
+ const othersTyping=Object.entries(typing).filter(([id,value])=>id!==uid&&Number(value)>Date.now()).length
+ const readAt=Object.entries(receipts).filter(([id])=>id!==uid).map(([,value])=>Number(value)||0)
+
+ return <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/45 p-0 backdrop-blur-sm sm:items-center sm:p-6" role="dialog" aria-modal="true" aria-label={conversation.title}>
+  <div className="flex h-[88vh] w-full max-w-2xl flex-col overflow-hidden rounded-t-[2rem] bg-white shadow-2xl animate-in fade-in slide-in-from-bottom-4 sm:h-[76vh] sm:rounded-[2rem]">
+   <header className="flex items-center justify-between border-b bg-[var(--afrigo-primary-green)] p-5 text-white"><div><p className="text-xs font-bold uppercase tracking-[.18em] text-white/70">Secure live conversation</p><h2 className="mt-1 text-lg font-black">{conversation.title}</h2></div><button onClick={onClose} aria-label="Close chat" className="rounded-full bg-white/15 px-3 py-2 text-lg transition hover:bg-white/25">×</button></header>
+   <div className="flex-1 space-y-3 overflow-y-auto bg-slate-50 p-4 sm:p-6">
+    {!ready&&!error&&<p className="text-center text-sm text-slate-500">Connecting securely…</p>}
+    {ready&&!messages.length&&<div className="mx-auto mt-12 max-w-sm text-center"><p className="text-3xl">💬</p><p className="mt-3 font-bold text-slate-800">Start the conversation</p><p className="mt-1 text-sm text-slate-500">Messages are delivered only to verified participants.</p></div>}
+    {messages.map(item=>{const mine=item.senderId===uid,created=Number(item.createdAt)||0,seen=mine&&readAt.some(value=>value>=created);return <div key={item.id} className={`flex ${mine?'justify-end':'justify-start'}`}><div className={`max-w-[85%] rounded-2xl px-4 py-3 shadow-sm ${mine?'rounded-br-md bg-[var(--afrigo-primary-green)] text-white':'rounded-bl-md border bg-white text-slate-900'}`}><div className={`mb-1 flex gap-2 text-[11px] font-bold ${mine?'text-white/70':'text-slate-500'}`}><span>{mine?'You':item.senderName||item.senderRole}</span><span>{item.senderRole}</span></div>{item.type==='attachment'?<button onClick={()=>void openAttachment(item.id)} className="flex items-center gap-2 text-left text-sm font-semibold underline underline-offset-2">📎 {item.fileName||item.message}<span className="text-[10px] opacity-70">{item.fileSize?`${Math.ceil(item.fileSize/1024)} KB`:''}</span></button>:<p className="whitespace-pre-wrap break-words text-sm">{item.message}</p>}<p className={`mt-1 text-right text-[10px] ${mine?'text-white/60':'text-slate-400'}`}>{created?new Date(created).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}):'Sending…'}{mine&&created?` · ${seen?'Read':'Delivered'}`:''}</p></div></div>})}
+    <div ref={bottom}/>
+   </div>
+   <div className="min-h-6 border-t bg-white px-5 pt-1 text-xs font-medium text-[var(--afrigo-primary-green)]">{othersTyping?`Someone is typing…`:''}</div>
+   {error&&<p role="alert" className="bg-red-50 px-5 py-2 text-sm text-red-700">{error}</p>}
+   <form onSubmit={send} className="flex items-end gap-2 bg-white p-3 pt-1 sm:p-4 sm:pt-1"><input ref={fileRef} type="file" accept=".pdf,image/jpeg,image/png,image/webp" className="hidden" onChange={event=>void attach(event.target.files?.[0])}/><button type="button" onClick={()=>fileRef.current?.click()} disabled={sending} title="Attach a file" aria-label="Attach a file" className="h-12 rounded-2xl border px-4 text-xl transition hover:bg-slate-50">📎</button><textarea required rows={1} maxLength={2000} value={text} onChange={event=>{setText(event.target.value);announceTyping()}} onKeyDown={event=>{if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();event.currentTarget.form?.requestSubmit()}}} placeholder="Write a message…" className="max-h-28 min-h-12 flex-1 resize-none rounded-2xl border bg-slate-50 px-4 py-3 outline-none focus:border-[var(--afrigo-primary-green)]"/><button disabled={sending||!text.trim()} className="h-12 rounded-2xl bg-[var(--afrigo-primary-green)] px-5 font-bold text-white transition hover:-translate-y-0.5 disabled:opacity-50">{sending?'…':'Send'}</button></form>
+  </div>
+ </div>
 }
