@@ -740,7 +740,7 @@ export default function Dashboard() {
                             </div>
                             <div className="flex gap-3">
                               <MotionButton whileTap={{ scale: 0.95 }} onClick={() => setSellerSelectedRFQ(null)} className="flex-1 rounded-lg border border-[var(--afrigo-border)] bg-[var(--afrigo-bg)] py-3 font-semibold text-[var(--afrigo-text)] hover:border-[var(--afrigo-primary-green)] hover:text-[var(--afrigo-primary-green)]">Back</MotionButton>
-                              <MotionButton whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.95 }} onClick={handleSellerSubmitQuote} className="flex-1 rounded-lg bg-gradient-to-r from-[var(--afrigo-primary-green)] to-[var(--afrigo-secondary-gold)] py-3 font-semibold text-white hover:opacity-90">Submit Quote</MotionButton>
+                              <MotionButton whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.95 }} onClick={handleSellerSubmitQuote} className="flex-1 rounded-lg bg-gradient-to-r from-[var(--afrigo-primary-green)] to-[var(--afrigo-secondary-gold)] py-3 font-semibold text-white hover:opacity-90">Add quote</MotionButton>
                             </div>
                           </div>
                         ) : (

@@ -23,7 +23,7 @@ export default function Header() {
 
         <div className="flex items-center gap-3">
           <div className="hidden rounded-full bg-[var(--afrigo-primary-green-light)] px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-[var(--afrigo-primary-green)] md:inline-flex">
-            {isDemo ? 'Preview session' : 'Instant preview'}
+            {isDemo ? 'Preview session' : 'Controlled trade'}
           </div>
 
           {!isSignedIn && !isAuthScreen ? (
@@ -34,7 +34,7 @@ export default function Header() {
             </Link>
           ) : isSignedIn ? (
             <>
-              {(user?.operationalRole||user?.email?.toLowerCase()==='babatundeoralusi@gmail.com')&&<Link href="/admin/operations" className="rounded-2xl bg-slate-900 px-3 py-2 text-sm font-semibold text-white transition hover:-translate-y-0.5">Operations</Link>}
+              {(user?.operationalRole||user?.email?.toLowerCase()==='ukwun97@gmail.com')&&<Link href="/admin/operations" className="rounded-2xl bg-slate-900 px-3 py-2 text-sm font-semibold text-white transition hover:-translate-y-0.5">Operations</Link>}
               <div className="hidden rounded-full border border-[var(--afrigo-border)] bg-[var(--afrigo-bg)] px-3 py-2 text-sm text-[var(--afrigo-text-secondary)] md:inline-flex">
                 {user?.displayName || 'User'}
               </div>

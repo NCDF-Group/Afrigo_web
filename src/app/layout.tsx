@@ -2,8 +2,8 @@ import './globals.css'
 import Header from '../components/Header'
 
 export const metadata = {
-  title: 'Afrigo',
-  description: 'Afrigo - Digital Trade Operating System'
+  title: 'Afrigo | African trade without the friction',
+  description: 'Controlled trade infrastructure connecting verified Buyers, inventory-backed Sellers and accountable Exporters from RFQ to settlement.'
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

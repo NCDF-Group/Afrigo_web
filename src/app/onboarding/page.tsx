@@ -15,7 +15,7 @@ export default function OnboardingPage() {
   const { user, isSignedIn } = useAuth()
   const [step, setStep] = useState(0)
   const [hoverHint, setHoverHint] = useState('Complete each step to activate your Afrigo export profile.')
-  const [companyName, setCompanyName] = useState('Afrigo Export Ltd')
+  const [companyName, setCompanyName] = useState('')
   const [country, setCountry] = useState('Nigeria')
   const [kycFiles, setKycFiles] = useState<File[]>([])
   const [status, setStatus] = useState<'idle' | 'saving' | 'success' | 'error'>('idle')
