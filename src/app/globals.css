@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Afrigo design tokens — see docs/design-foundation.md */
+/* Afrigo design tokens — logo dark green #025344 (primary) and logo lime #7CB041 (accent) */
 :root {
   --color-bg: #FAFAF7;
   --color-surface: #FFFFFF;
@@ -12,16 +12,16 @@
   --color-text: #111A15;
   --color-text-muted: #5F6D65;
   --color-text-faint: #8B968F;
-  --color-primary: #0E6A3F;
-  --color-primary-hover: #0B5634;
-  --color-primary-soft: #EEF7F1;
+  --color-primary: #025344;
+  --color-primary-hover: #024437;
+  --color-primary-soft: #E8F4F0;
   --color-on-primary: #FFFFFF;
-  --color-accent: #C9971A;
-  --color-accent-hover: #E3B02E;
-  --color-on-accent: #041C12;
-  --color-accent-text: #86600F;
-  --color-inverse-bg: #072E1D;
-  --color-focus: #E3B02E;
+  --color-accent: #7CB041;
+  --color-accent-hover: #8FC155;
+  --color-on-accent: #011A15;
+  --color-accent-text: #4E7228;
+  --color-inverse-bg: #012A22;
+  --color-focus: #649233;
   --color-success: #15803D;
   --color-warning: #B45309;
   --color-danger: #B91C1C;
@@ -30,7 +30,7 @@
   /* Legacy aliases — keep until the workspace screens are rebuilt on the tokens above */
   --afrigo-primary-green: var(--color-primary);
   --afrigo-primary-green-hover: var(--color-primary-hover);
-  --afrigo-primary-green-light: #1B7F4E;
+  --afrigo-primary-green-light: #0B7259;
   --afrigo-secondary-gold: var(--color-accent-text);
   --afrigo-accent-blue: var(--color-info);
   --afrigo-success: var(--color-success);
@@ -78,7 +78,7 @@ button, a { touch-action: manipulation; }
 }
 
 ::selection {
-  background: #F4DB8C;
+  background: #C9E3A8;
   color: var(--color-text);
 }
 
@@ -103,7 +103,7 @@ button, a { touch-action: manipulation; }
   animation: reveal-up .8s cubic-bezier(.2, .7, .2, 1) var(--reveal-delay, 0ms) both;
 }
 
-/* Interactive cards: lift, gold top rule and a cursor-following spotlight. */
+/* Interactive cards: lift, lime top rule and a cursor-following spotlight. */
 .card-interactive {
   --spot: rgba(201, 151, 26, .12);
   position: relative;
@@ -116,7 +116,7 @@ button, a { touch-action: manipulation; }
   position: absolute;
   inset: 0 0 auto 0;
   height: 3px;
-  background: linear-gradient(90deg, #C9971A, #EDC555);
+  background: linear-gradient(90deg, #7CB041, #A8D176);
   transform: scaleX(0);
   transform-origin: left;
   transition: transform .5s cubic-bezier(.2, .7, .2, 1);
@@ -126,7 +126,7 @@ button, a { touch-action: manipulation; }
   .card-interactive:hover {
     transform: translateY(-6px);
     box-shadow: 0 18px 40px -12px rgba(7, 46, 29, .22);
-    border-color: #A9D8BB;
+    border-color: #9BCFBF;
     background-image: radial-gradient(360px circle at var(--mx, 50%) var(--my, 50%), var(--spot), transparent 70%);
   }
   .card-interactive.card-dark:hover { border-color: rgba(237, 197, 85, .35); }

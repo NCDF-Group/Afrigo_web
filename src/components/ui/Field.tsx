@@ -1,6 +1,7 @@
 'use client'
 import { useId, useState } from 'react'
 import { input } from './styles'
+import { useI18n } from '@/i18n/client'
 
 type FieldProps = React.InputHTMLAttributes<HTMLInputElement> & { label: string; hint?: string; error?: string; action?: React.ReactNode }
 
@@ -25,6 +26,7 @@ export function Field({ label, hint, error, action, id, className, ...props }: F
 }
 
 export function PasswordField(props: Omit<FieldProps, 'type'>) {
+  const { t } = useI18n()
   const [visible, setVisible] = useState(false)
   const autoId = useId()
   const fieldId = props.id || autoId
@@ -45,7 +47,7 @@ export function PasswordField(props: Omit<FieldProps, 'type'>) {
           aria-pressed={visible}
           className="absolute inset-y-1 right-1 rounded-[9px] px-3 text-sm font-semibold text-ink-500 hover:bg-subtle hover:text-ink-900"
         >
-          {visible ? 'Hide' : 'Show'}
+          {visible ? t.auth.hide : t.auth.show}
         </button>
       </div>
       {error ? (
@@ -67,9 +69,10 @@ export function FormAlert({ tone = 'danger', children }: { tone?: 'danger' | 'su
 }
 
 export function OrDivider() {
+  const { t } = useI18n()
   return (
     <div className="my-6 flex items-center gap-3 text-xs font-semibold uppercase tracking-[.08em] text-ink-400">
-      <span className="h-px flex-1 bg-line" />or<span className="h-px flex-1 bg-line" />
+      <span className="h-px flex-1 bg-line" />{t.auth.or}<span className="h-px flex-1 bg-line" />
     </div>
   )
 }

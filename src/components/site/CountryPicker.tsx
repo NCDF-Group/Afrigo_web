@@ -1,6 +1,8 @@
 'use client'
 import { useEffect, useId, useMemo, useRef, useState } from 'react'
 import type { MapCountry } from './africaMapData'
+import { useI18n } from '@/i18n/client'
+import { fmt } from '@/i18n/config'
 
 type Group = { label: string; items: MapCountry[] }
 
@@ -25,12 +27,13 @@ function Highlight({ text, query }: { text: string; query: string }) {
   const folded = Array.from(text).map(char => normalise(char)).join('')
   const start = folded.indexOf(q)
   if (start < 0 || folded.length !== text.length) return <>{text}</>
-  return <>{text.slice(0, start)}<mark className="bg-transparent font-bold text-inherit underline decoration-gold-400 decoration-2 underline-offset-4">{text.slice(start, start + q.length)}</mark>{text.slice(start + q.length)}</>
+  return <>{text.slice(0, start)}<mark className="bg-transparent font-bold text-inherit underline decoration-accent-400 decoration-2 underline-offset-4">{text.slice(start, start + q.length)}</mark>{text.slice(start + q.length)}</>
 }
 
 // Searchable combobox (WAI-ARIA 1.2 pattern): type to filter, arrows to move, Enter to choose, Escape to close.
 export default function CountryPicker({ countries, value, onChange, isMember, memberLabel, otherLabel, quickPicks, dark }: Props) {
   const id = useId()
+  const copy = useI18n().t.map.picker
   const listId = `${id}-list`
   const [open, setOpen] = useState(false)
   const [query, setQuery] = useState('')
@@ -90,18 +93,18 @@ export default function CountryPicker({ countries, value, onChange, isMember, me
   }
 
   const field = dark
-    ? 'border-white/15 bg-brand-950/60 text-white placeholder:text-white/40 focus:border-gold-400 focus:ring-gold-400/25'
+    ? 'border-white/15 bg-brand-950/60 text-white placeholder:text-white/40 focus:border-accent-400 focus:ring-accent-400/25'
     : 'border-line bg-white text-ink-900 placeholder:text-ink-400 focus:border-brand-600 focus:ring-brand-600/10'
   const popover = dark ? 'border-white/15 bg-brand-950 text-white shadow-[0_24px_48px_-12px_rgba(0,0,0,.6)]' : 'border-line bg-white text-ink-900 shadow-lg'
   const muted = dark ? 'text-white/50' : 'text-ink-500'
-  const chip = dark ? 'border-white/15 text-white/80 hover:border-gold-400 hover:text-white' : 'border-line bg-white text-ink-700 hover:border-brand-300'
-  const chipActive = dark ? 'border-gold-400 bg-gold-400/15 text-gold-200' : 'border-brand-600 bg-brand-50 text-brand-700'
+  const chip = dark ? 'border-white/15 text-white/80 hover:border-accent-400 hover:text-white' : 'border-line bg-white text-ink-700 hover:border-brand-300'
+  const chipActive = dark ? 'border-accent-400 bg-accent-400/15 text-accent-200' : 'border-brand-600 bg-brand-50 text-brand-700'
 
   let index = -1
 
   return (
     <div ref={root}>
-      <label htmlFor={`${id}-input`} className={`mb-1.5 block text-sm font-semibold ${dark ? 'text-white' : 'text-ink-900'}`}>Explore a country</label>
+      <label htmlFor={`${id}-input`} className={`mb-1.5 block text-sm font-semibold ${dark ? 'text-white' : 'text-ink-900'}`}>{copy.label}</label>
       <div className="relative">
         <svg viewBox="0 0 24 24" className={`pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 ${muted}`} fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
           <circle cx="11" cy="11" r="7" /><path d="m20 20-3.5-3.5" />
@@ -117,7 +120,7 @@ export default function CountryPicker({ countries, value, onChange, isMember, me
           autoComplete="off"
           spellCheck={false}
           value={open ? query : value?.name || ''}
-          placeholder={value ? value.name : `Search ${countries.length} countries…`}
+          placeholder={value ? value.name : fmt(copy.placeholder, { count: countries.length })}
           onFocus={openList}
           onClick={() => !open && openList()}
           onChange={event => { setQuery(open ? event.target.value : event.target.value.replace(value?.name || '', '')); setActive(0); if (!open) setOpen(true) }}
@@ -126,7 +129,7 @@ export default function CountryPicker({ countries, value, onChange, isMember, me
         />
         <div className="absolute inset-y-0 right-2 flex items-center gap-1">
           {value && (
-            <button type="button" aria-label="Clear country" onClick={() => { onChange(null); setQuery(''); input.current?.focus() }} className={`flex h-8 w-8 items-center justify-center rounded-full ${dark ? 'text-white/60 hover:bg-white/10 hover:text-white' : 'text-ink-500 hover:bg-subtle hover:text-ink-900'}`}>
+            <button type="button" aria-label={copy.clear} onClick={() => { onChange(null); setQuery(''); input.current?.focus() }} className={`flex h-8 w-8 items-center justify-center rounded-full ${dark ? 'text-white/60 hover:bg-white/10 hover:text-white' : 'text-ink-500 hover:bg-subtle hover:text-ink-900'}`}>
               <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18" /></svg>
             </button>
           )}
@@ -137,10 +140,10 @@ export default function CountryPicker({ countries, value, onChange, isMember, me
 
         {open && (
           <div className={`absolute inset-x-0 top-[calc(100%+6px)] z-20 overflow-hidden rounded-card border ${popover}`}>
-            <ul ref={list} id={listId} role="listbox" aria-label="Countries" data-lenis-prevent className="max-h-72 overflow-y-auto overscroll-contain pb-2">
+            <ul ref={list} id={listId} role="listbox" aria-label={copy.list} data-lenis-prevent className="max-h-72 overflow-y-auto overscroll-contain pb-2">
               {groups.map(group => (
                 <li key={group.label} role="presentation">
-                  <p role="presentation" className={`sticky top-0 z-10 px-4 pb-1.5 pt-2 text-[11px] font-bold uppercase tracking-[.08em] ${dark ? 'bg-brand-950 text-gold-300' : 'bg-white text-gold-700'}`}>
+                  <p role="presentation" className={`sticky top-0 z-10 px-4 pb-1.5 pt-2 text-[11px] font-bold uppercase tracking-[.08em] ${dark ? 'bg-brand-950 text-accent-300' : 'bg-white text-accent-700'}`}>
                     {group.label} <span className={muted}>· {group.items.length}</span>
                   </p>
                   <ul role="group" aria-label={group.label}>
@@ -164,7 +167,7 @@ export default function CountryPicker({ countries, value, onChange, isMember, me
                           <span aria-hidden="true" className={`h-2.5 w-2.5 shrink-0 rounded-full ${isMember(country.id) ? 'bg-brand-500' : dark ? 'bg-white/20' : 'bg-line-strong'}`} />
                           <span className="flex-1 font-medium"><Highlight text={country.name} query={query} /></span>
                           {isSelected && (
-                            <svg viewBox="0 0 24 24" className={`h-4 w-4 ${dark ? 'text-gold-300' : 'text-brand-600'}`} fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5" /></svg>
+                            <svg viewBox="0 0 24 24" className={`h-4 w-4 ${dark ? 'text-accent-300' : 'text-brand-600'}`} fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5" /></svg>
                           )}
                         </li>
                       )
@@ -172,14 +175,14 @@ export default function CountryPicker({ countries, value, onChange, isMember, me
                   </ul>
                 </li>
               ))}
-              {!flat.length && <li role="presentation" className={`px-4 py-6 text-center text-sm ${muted}`}>No country matches “{query}”.</li>}
+              {!flat.length && <li role="presentation" className={`px-4 py-6 text-center text-sm ${muted}`}>{fmt(copy.noMatch, { query })}</li>}
             </ul>
           </div>
         )}
       </div>
 
       <div className="mt-3 flex flex-wrap items-center gap-2">
-        <span className={`text-xs font-semibold ${muted}`}>Popular:</span>
+        <span className={`text-xs font-semibold ${muted}`}>{copy.popular}</span>
         {quickPicks.map(pickId => {
           const country = countries.find(item => item.id === pickId)
           if (!country) return null

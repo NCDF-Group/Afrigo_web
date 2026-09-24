@@ -1,36 +1,37 @@
+// Labels live in the i18n dictionaries (nav.items / footer.groups); only routes are defined here.
 export const siteNav = [
-  { href: '/how-it-works', label: 'How it works' },
-  { href: '/opportunities', label: 'Opportunities' },
-  { href: '/market-access', label: 'Market access' },
-  { href: '/services', label: 'Services & pricing' },
-  { href: '/about', label: 'About' }
+  { href: '/how-it-works', key: 'howItWorks' },
+  { href: '/opportunities', key: 'opportunities' },
+  { href: '/market-access', key: 'marketAccess' },
+  { href: '/services', key: 'services' },
+  { href: '/about', key: 'about' }
 ] as const
 
 export const footerNav = [
   {
-    title: 'Platform',
+    key: 'platform',
     links: [
-      { href: '/how-it-works', label: 'How it works' },
-      { href: '/opportunities', label: 'Trade opportunities' },
-      { href: '/market-access', label: 'Market access' },
-      { href: '/services', label: 'Services & pricing' }
+      { href: '/how-it-works', key: 'howItWorks' },
+      { href: '/opportunities', key: 'opportunities' },
+      { href: '/market-access', key: 'marketAccess' },
+      { href: '/services', key: 'services' }
     ]
   },
   {
-    title: 'Company',
+    key: 'company',
     links: [
-      { href: '/about', label: 'About Afrigo' },
-      { href: '/about#ncdf-group', label: 'NCDF Group' },
-      { href: '/contact', label: 'Contact us' }
+      { href: '/about', key: 'about' },
+      { href: '/about#ncdf-group', key: 'ncdf' },
+      { href: '/contact', key: 'contact' }
     ]
   },
   {
-    title: 'Get started',
+    key: 'getStarted',
     links: [
-      { href: '/register', label: 'Register your business' },
-      { href: '/sign-in', label: 'Sign in' },
-      { href: '/privacy', label: 'Privacy' },
-      { href: '/terms', label: 'Terms' }
+      { href: '/register', key: 'register' },
+      { href: '/sign-in', key: 'signIn' },
+      { href: '/privacy', key: 'privacy' },
+      { href: '/terms', key: 'terms' }
     ]
   }
 ] as const

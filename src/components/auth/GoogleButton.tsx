@@ -1,7 +1,9 @@
 'use client'
 import { button } from '@/components/ui/styles'
+import { useI18n } from '@/i18n/client'
 
-export default function GoogleButton({ onClick, busy, label = 'Continue with Google' }: { onClick: () => void; busy?: boolean; label?: string }) {
+export default function GoogleButton({ onClick, busy, label }: { onClick: () => void; busy?: boolean; label?: string }) {
+  const { t } = useI18n()
   return (
     <button type="button" onClick={onClick} disabled={busy} className={`${button.secondary} min-h-12 w-full text-[15px]`}>
       <svg viewBox="0 0 48 48" className="h-5 w-5" aria-hidden="true">
@@ -10,7 +12,7 @@ export default function GoogleButton({ onClick, busy, label = 'Continue with Goo
         <path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-8l-6.5 5C9.5 39.6 16.2 44 24 44z" />
         <path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.2-4.1 5.6l6.2 5.2C37 39.2 44 34 44 24c0-1.3-.1-2.4-.4-3.5z" />
       </svg>
-      {busy ? 'Connecting to Google…' : label}
+      {busy ? t.auth.google.connecting : label ?? t.auth.google.continue}
     </button>
   )
 }

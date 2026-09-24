@@ -4,68 +4,38 @@ import Icon, { IconBadge, type IconName } from '@/components/ui/Icon'
 import { button, card } from '@/components/ui/styles'
 import { CheckItem, CtaBand, PageHero, SectionHeading, revealDelay } from '@/components/site/Section'
 import AfricaMarketsMap from '@/components/site/AfricaMarketsMap'
+import { fmt } from '@/i18n/config'
+import { getDictionary } from '@/i18n/server'
 
-export const metadata: Metadata = {
-  title: 'Market access',
-  description: 'Traceable ETLS and AfCFTA guidance: requirements, official references and preparation tasks for trade across Africa.'
+export async function generateMetadata(): Promise<Metadata> {
+  const { t } = await getDictionary()
+  return t.meta.pages.marketAccess
 }
 
-const flow: { title: string; text: string; icon: IconName }[] = [
-  { title: 'Tell us the trade', text: 'Choose the product, the country of origin and the destination country.', icon: 'pin' },
-  { title: 'Get traceable guidance', text: 'See the applicable ETLS or AfCFTA requirements, each with its official reference and the date it was last reviewed.', icon: 'book' },
-  { title: 'Prepare and escalate', text: 'Upload origin evidence, track preparation tasks and escalate unresolved questions to the Afrigo team.', icon: 'clipboard' }
+const flowIcons: IconName[] = ['pin', 'book', 'clipboard']
+const schemeLinks = [
+  { id: 'etls', href: 'https://etls.ecowas.int' },
+  { id: 'afcfta', href: 'https://au-afcfta.org' }
 ]
 
-const schemes = [
-  {
-    id: 'etls',
-    name: 'ETLS',
-    full: 'ECOWAS Trade Liberalisation Scheme',
-    text: 'The scheme for duty-free movement of qualifying goods between ECOWAS member states.',
-    points: [
-      'Covers unprocessed goods, livestock and traditional handicrafts',
-      'Industrial products need the product and manufacturer to be approved under the scheme',
-      'Qualifying industrial goods travel with an ECOWAS certificate of origin',
-      'Approval runs through national authorities in each member state'
-    ],
-    source: { label: 'ECOWAS ETLS portal', href: 'https://etls.ecowas.int' }
-  },
-  {
-    id: 'afcfta',
-    name: 'AfCFTA',
-    full: 'African Continental Free Trade Area',
-    text: 'The continental agreement for preferential trade between State Parties that are trading under it.',
-    points: [
-      'Goods must meet AfCFTA rules of origin — wholly obtained or sufficiently transformed',
-      'Product-specific rules decide what counts as sufficient transformation',
-      'Preferences depend on both countries’ published tariff schedules',
-      'Claims are supported by an AfCFTA certificate of origin from a competent authority'
-    ],
-    source: { label: 'AfCFTA Secretariat', href: 'https://au-afcfta.org' }
-  }
-]
+export default async function MarketAccessPage() {
+  const { t } = await getDictionary()
+  const copy = t.marketAccess
 
-export default function MarketAccessPage() {
   return (
     <>
-      <PageHero
-        overline="Market access"
-        title="Know what it takes to trade across borders"
-        text="Clear, referenced guidance for ETLS and AfCFTA — so you can prepare the right evidence before goods move."
-        image="/images/hero-market-access.webp"
-        position="60% center"
-      >
-        <Link href="/register" className={`${button.accent} min-h-12 px-7 text-[15px]`}>Register to use guidance</Link>
-        <Link href="/contact?topic=market-access" className={`${button.ghostLight} min-h-12 px-7 text-[15px]`}>Ask a question</Link>
+      <PageHero overline={copy.hero.overline} title={copy.hero.title} text={copy.hero.text} image="/images/hero-market-access.webp" position="60% center">
+        <Link href="/register" className={`${button.accent} min-h-12 px-7 text-[15px]`}>{copy.hero.register}</Link>
+        <Link href="/contact?topic=market-access" className={`${button.ghostLight} min-h-12 px-7 text-[15px]`}>{copy.hero.ask}</Link>
       </PageHero>
 
       <section className="mx-auto max-w-site px-4 py-20 sm:px-6 lg:px-8 lg:py-28">
-        <SectionHeading overline="How guidance works" title="Guidance you can trace back to the source" />
+        <SectionHeading overline={copy.how.overline} title={copy.how.title} />
         <ol className="mt-12 grid gap-4 md:grid-cols-3">
-          {flow.map((item, index) => (
-            <li key={item.title} data-reveal style={revealDelay(index)} className={card.light}>
+          {copy.how.steps.map((item, index) => (
+            <li key={index} data-reveal style={revealDelay(index)} className={card.light}>
               <div className="flex items-center justify-between">
-                <IconBadge name={item.icon} />
+                <IconBadge name={flowIcons[index]} />
                 <span className="font-display text-sm font-bold text-ink-400">0{index + 1}</span>
               </div>
               <h3 className="mt-5 font-display text-xl font-semibold text-ink-900">{item.title}</h3>
@@ -77,23 +47,23 @@ export default function MarketAccessPage() {
 
       <section className="bg-brand-900">
         <div className="mx-auto max-w-site px-4 py-20 sm:px-6 lg:px-8 lg:py-28">
-          <SectionHeading invert overline="Trade schemes" title="Separate workflows for ETLS and AfCFTA" text="The two schemes have different eligibility, evidence and approval steps, so Afrigo keeps them apart." />
+          <SectionHeading invert overline={copy.schemes.overline} title={copy.schemes.title} text={copy.schemes.text} />
           <div className="mt-12 grid gap-4 lg:grid-cols-2">
-            {schemes.map((scheme, index) => (
-              <article key={scheme.id} id={scheme.id} data-reveal style={revealDelay(index)} className={`${card.dark} p-7 lg:p-8`}>
+            {copy.schemes.items.map((scheme, index) => (
+              <article key={schemeLinks[index].id} id={schemeLinks[index].id} data-reveal style={revealDelay(index)} className={`${card.dark} p-7 lg:p-8`}>
                 <div className="flex items-start gap-4">
                   <IconBadge name="globe" tone="dark" />
                   <div>
-                    <h3 className="font-display text-2xl font-bold text-gold-300">{scheme.name}</h3>
+                    <h3 className="font-display text-2xl font-bold text-accent-300">{scheme.name}</h3>
                     <p className="text-sm font-semibold text-white/60">{scheme.full}</p>
                   </div>
                 </div>
                 <p className="mt-5 text-[15px] leading-6 text-white/80">{scheme.text}</p>
                 <ul className="mt-5 space-y-3 text-[15px] leading-6 text-white/75">
-                  {scheme.points.map(point => <CheckItem key={point} invert>{point}</CheckItem>)}
+                  {scheme.points.map((point, pointIndex) => <CheckItem key={pointIndex} invert>{point}</CheckItem>)}
                 </ul>
-                <a href={scheme.source.href} target="_blank" rel="noopener noreferrer" className="mt-6 inline-block text-sm font-bold text-gold-300 underline-offset-4 hover:underline">
-                  Official source: {scheme.source.label}
+                <a href={schemeLinks[index].href} target="_blank" rel="noopener noreferrer" className="mt-6 inline-block text-sm font-bold text-accent-300 underline-offset-4 hover:underline">
+                  {fmt(copy.schemes.officialSource, { label: scheme.sourceLabel })}
                 </a>
               </article>
             ))}
@@ -103,26 +73,24 @@ export default function MarketAccessPage() {
 
       <section className="mx-auto max-w-site px-4 py-20 sm:px-6 lg:px-8 lg:py-28">
         <AfricaMarketsMap tone="light">
-          <SectionHeading overline="Supported markets" title="Starting in West Africa, built for the continent" text="The pilot covers selected West African markets. Countries, currencies, products and trade requirements are configurable, so new markets can be added as demand grows." />
+          <SectionHeading overline={copy.markets.overline} title={copy.markets.title} text={copy.markets.text} />
         </AfricaMarketsMap>
         <div className="mt-14 grid gap-8 lg:grid-cols-[1fr_auto] lg:items-start">
-        <div data-reveal className="rounded-card border-2 border-gold-400 bg-gold-50 p-7">
-          <div className="flex items-center gap-3">
-            <Icon name="shield" className="h-6 w-6 text-gold-700" />
-            <h3 className="font-display text-lg font-bold text-ink-900">What Afrigo does not do</h3>
+          <div data-reveal className="rounded-card border-2 border-accent-400 bg-accent-50 p-7">
+            <div className="flex items-center gap-3">
+              <Icon name="shield" className="h-6 w-6 text-accent-700" />
+              <h3 className="font-display text-lg font-bold text-ink-900">{copy.notDo.title}</h3>
+            </div>
+            <ul className="mt-5 space-y-3 text-[15px] leading-6 text-ink-700">
+              {copy.notDo.items.map((item, index) => <CheckItem key={index}>{item}</CheckItem>)}
+            </ul>
+            <p className="mt-5 text-sm leading-6 text-ink-500">{copy.notDo.note}</p>
           </div>
-          <ul className="mt-5 space-y-3 text-[15px] leading-6 text-ink-700">
-            <CheckItem>Afrigo does not issue certificates of origin or any other official certificate.</CheckItem>
-            <CheckItem>Afrigo never promises or guarantees duty-free access.</CheckItem>
-            <CheckItem>Eligibility and duties are decided by customs and the competent authorities in each country.</CheckItem>
-          </ul>
-          <p className="mt-5 text-sm leading-6 text-ink-500">Guidance shows its official reference and last-review date. Always confirm requirements with the relevant authority before shipping.</p>
-        </div>
-          <Link href="/contact?topic=market-access" className={`${button.secondary} lg:mt-2`}>Ask about your market</Link>
+          <Link href="/contact?topic=market-access" className={`${button.secondary} lg:mt-2`}>{copy.askMarket}</Link>
         </div>
       </section>
 
-      <CtaBand title="Prepare your next shipment with confidence" text="Register to check requirements, upload origin evidence and track preparation tasks." />
+      <CtaBand title={copy.cta.title} text={copy.cta.text} />
     </>
   )
 }

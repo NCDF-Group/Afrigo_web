@@ -41,7 +41,7 @@ export default function Typewriter({ phrases, typeMs = 70, deleteMs = 35, holdMs
   return (
     <span aria-hidden="true">
       {phrases[index].slice(0, length)}
-      <span className="caret ml-1 inline-block h-[0.9em] w-[3px] translate-y-[0.08em] rounded-full bg-gold-400 align-baseline" />
+      <span className="caret ml-1 inline-block h-[0.9em] w-[3px] translate-y-[0.08em] rounded-full bg-accent-400 align-baseline" />
     </span>
   )
 }

@@ -4,6 +4,8 @@ import Link from 'next/link'
 import { button } from '@/components/ui/styles'
 import { MAP_COUNTRIES, MAP_HUBS, MAP_VIEWBOX, type MapCountry } from './africaMapData'
 import CountryPicker from './CountryPicker'
+import { useI18n } from '@/i18n/client'
+import { fmt, INTL_LOCALE } from '@/i18n/config'
 
 type Mode = 'etls' | 'afcfta'
 type Tone = 'dark' | 'light'
@@ -24,8 +26,8 @@ const HUBS_BY_MODE: Record<Mode, (keyof typeof MAP_HUBS)[]> = {
 }
 
 const PALETTE: Record<Tone, { base: string; member: string; hover: string; selected: string; stroke: string; route: string; hub: string }> = {
-  dark: { base: 'rgba(255,255,255,.07)', member: '#1B7F4E', hover: '#3F9E6C', selected: '#C9971A', stroke: '#072E1D', route: '#EDC555', hub: '#FFFFFF' },
-  light: { base: '#E4E2D9', member: '#1B7F4E', hover: '#0B5634', selected: '#C9971A', stroke: '#FAFAF7', route: '#A87A12', hub: '#072E1D' }
+  dark: { base: 'rgba(255,255,255,.07)', member: '#0B7259', hover: '#2E9278', selected: '#7CB041', stroke: '#012A22', route: '#A8D176', hub: '#FFFFFF' },
+  light: { base: '#E4E2D9', member: '#0B7259', hover: '#024437', selected: '#7CB041', stroke: '#FAFAF7', route: '#649233', hub: '#012A22' }
 }
 
 // Nigeria, Ghana, Côte d'Ivoire, Senegal, Kenya, South Africa
@@ -39,41 +41,47 @@ function arc(a: { x: number; y: number }, b: { x: number; y: number }, bend: num
   return `M${a.x} ${a.y}Q${mx - dy * bend} ${my + dx * bend} ${b.x} ${b.y}`
 }
 
-function describe(country: MapCountry) {
-  const ecowas = ECOWAS.has(country.id)
-  const signatory = !AFCFTA_NON_SIGNATORY.has(country.id)
-  if (ecowas) return 'An ECOWAS member. Trade with other member states may qualify under ETLS where goods and producers meet the scheme’s rules, and AfCFTA preferences can apply for wider African trade.'
-  if (signatory) return 'Outside ECOWAS, so ETLS does not apply. AfCFTA preferences may apply where both countries are trading under the agreement and goods meet its rules of origin.'
-  return 'Not an AfCFTA signatory and outside ECOWAS. Standard customs requirements apply — confirm them with the relevant authorities.'
-}
+const describeKey = (id: string) => (ECOWAS.has(id) ? 'ecowas' : !AFCFTA_NON_SIGNATORY.has(id) ? 'signatory' : 'other') as 'ecowas' | 'signatory' | 'other'
 
 export default function AfricaMarketsMap({ tone = 'dark', children }: { tone?: Tone; children?: React.ReactNode }) {
+  const { locale, t } = useI18n()
+  const copy = t.map
   const [mode, setMode] = useState<Mode>('etls')
-  const [selected, setSelected] = useState<MapCountry | null>(() => MAP_COUNTRIES.find(country => country.id === '566') || null)
-  const [hover, setHover] = useState<{ country: MapCountry; x: number; y: number } | null>(null)
+  // Selection is stored by id so the visible name follows the active language.
+  const [selectedId, setSelectedId] = useState<string | null>('566')
+  const [hover, setHover] = useState<{ id: string; x: number; y: number } | null>(null)
+
+  const countries = useMemo(
+    () => MAP_COUNTRIES.map(country => ({ ...country, name: t.countries[country.id] || country.name })).sort((a, b) => a.name.localeCompare(b.name, INTL_LOCALE[locale])),
+    [locale, t.countries]
+  )
+  const byId = useMemo(() => new Map(countries.map(country => [country.id, country])), [countries])
+  const selected = selectedId ? byId.get(selectedId) || null : null
+  const hovered = hover ? byId.get(hover.id) : undefined
   const frame = useRef<HTMLDivElement>(null)
   const colors = PALETTE[tone]
   const dark = tone === 'dark'
 
   const isMember = useCallback((id: string) => inMode(mode, id), [mode])
   const counts = useMemo(() => ({ etls: ECOWAS.size, afcfta: MAP_COUNTRIES.filter(country => !AFCFTA_NON_SIGNATORY.has(country.id)).length }), [])
+  const number = new Intl.NumberFormat(INTL_LOCALE[locale])
 
   const fill = (country: MapCountry) => {
-    if (selected?.id === country.id) return colors.selected
-    if (hover?.country.id === country.id) return colors.hover
+    if (selectedId === country.id) return colors.selected
+    if (hover?.id === country.id) return colors.hover
     return inMode(mode, country.id) ? colors.member : colors.base
   }
 
   const track = (country: MapCountry, event: React.PointerEvent) => {
     if (event.pointerType !== 'mouse' || !frame.current) return
     const rect = frame.current.getBoundingClientRect()
-    setHover({ country, x: ((event.clientX - rect.left) / rect.width) * 100, y: ((event.clientY - rect.top) / rect.height) * 100 })
+    setHover({ id: country.id, x: ((event.clientX - rect.left) / rect.width) * 100, y: ((event.clientY - rect.top) / rect.height) * 100 })
   }
 
   const handlers = (country: MapCountry) => ({
     onPointerMove: (event: React.PointerEvent) => track(country, event),
     onPointerLeave: () => setHover(null),
-    onClick: () => setSelected(current => (current?.id === country.id ? null : country))
+    onClick: () => setSelectedId(current => (current === country.id ? null : country.id))
   })
 
   const text = dark ? 'text-white' : 'text-ink-900'
@@ -85,39 +93,39 @@ export default function AfricaMarketsMap({ tone = 'dark', children }: { tone?: T
       <div>
         {children}
 
-        <div role="group" aria-label="Trade scheme" className={`mt-8 inline-flex rounded-full border p-1 ${dark ? 'border-white/15 bg-white/5' : 'border-line bg-white'}`}>
+        <div role="group" aria-label={copy.scheme} className={`mt-8 inline-flex rounded-full border p-1 ${dark ? 'border-white/15 bg-white/5' : 'border-line bg-white'}`}>
           {(['etls', 'afcfta'] as const).map(value => (
             <button
               key={value}
               type="button"
               aria-pressed={mode === value}
               onClick={() => setMode(value)}
-              className={`rounded-full px-5 py-2 text-sm font-bold transition-colors ${mode === value ? (dark ? 'bg-gold-500 text-brand-950' : 'bg-brand-600 text-white') : muted}`}
+              className={`rounded-full px-5 py-2 text-sm font-bold transition-colors ${mode === value ? (dark ? 'bg-accent-500 text-brand-950' : 'bg-brand-600 text-white') : muted}`}
             >
-              {value === 'etls' ? 'ETLS · ECOWAS' : 'AfCFTA'}
+              {copy.tabs[value]}
             </button>
           ))}
         </div>
 
         <dl className="mt-6 grid grid-cols-2 gap-3">
           <div className={`rounded-card border p-4 ${panel}`}>
-            <dt className={`text-xs font-semibold ${muted}`}>{mode === 'etls' ? 'ECOWAS member states' : 'AfCFTA signatories'}</dt>
-            <dd className={`mt-1 font-display text-3xl font-bold ${dark ? 'text-gold-300' : 'text-brand-600'}`}>{mode === 'etls' ? counts.etls : counts.afcfta}</dd>
+            <dt className={`text-xs font-semibold ${muted}`}>{copy.stats[mode]}</dt>
+            <dd className={`mt-1 font-display text-3xl font-bold ${dark ? 'text-accent-300' : 'text-brand-600'}`}>{number.format(mode === 'etls' ? counts.etls : counts.afcfta)}</dd>
           </div>
           <div className={`rounded-card border p-4 ${panel}`}>
-            <dt className={`text-xs font-semibold ${muted}`}>{mode === 'etls' ? 'Coverage' : 'Of AU members'}</dt>
-            <dd className={`mt-1 font-display text-3xl font-bold ${dark ? 'text-gold-300' : 'text-brand-600'}`}>{mode === 'etls' ? 'West Africa' : `${counts.afcfta}/${MAP_COUNTRIES.length}`}</dd>
+            <dt className={`text-xs font-semibold ${muted}`}>{mode === 'etls' ? copy.stats.coverage : copy.stats.ofAu}</dt>
+            <dd className={`mt-1 font-display text-3xl font-bold ${dark ? 'text-accent-300' : 'text-brand-600'}`}>{mode === 'etls' ? copy.stats.westAfrica : `${counts.afcfta}/${MAP_COUNTRIES.length}`}</dd>
           </div>
         </dl>
 
         <div className="mt-6">
           <CountryPicker
-            countries={MAP_COUNTRIES}
+            countries={countries}
             value={selected}
-            onChange={setSelected}
+            onChange={country => setSelectedId(country?.id || null)}
             isMember={isMember}
-            memberLabel={mode === 'etls' ? 'ECOWAS members' : 'AfCFTA signatories'}
-            otherLabel={mode === 'etls' ? 'Other African countries' : 'Not a signatory'}
+            memberLabel={mode === 'etls' ? copy.picker.groups.etlsMember : copy.picker.groups.afcftaMember}
+            otherLabel={mode === 'etls' ? copy.picker.groups.etlsOther : copy.picker.groups.afcftaOther}
             quickPicks={QUICK_PICKS}
             dark={dark}
           />
@@ -128,22 +136,22 @@ export default function AfricaMarketsMap({ tone = 'dark', children }: { tone?: T
             <>
               <div className="flex flex-wrap items-center gap-2">
                 <h3 className={`font-display text-xl font-bold ${text}`}>{selected.name}</h3>
-                {ECOWAS.has(selected.id) && <span className={`rounded-full px-2.5 py-0.5 text-xs font-bold ${dark ? 'bg-brand-500/25 text-brand-200' : 'bg-brand-50 text-brand-700'}`}>ECOWAS · ETLS</span>}
-                {!AFCFTA_NON_SIGNATORY.has(selected.id) && <span className={`rounded-full px-2.5 py-0.5 text-xs font-bold ${dark ? 'bg-gold-400/15 text-gold-300' : 'bg-gold-50 text-gold-700'}`}>AfCFTA signatory</span>}
+                {ECOWAS.has(selected.id) && <span className={`rounded-full px-2.5 py-0.5 text-xs font-bold ${dark ? 'bg-brand-500/25 text-brand-200' : 'bg-brand-50 text-brand-700'}`}>{copy.badges.ecowas}</span>}
+                {!AFCFTA_NON_SIGNATORY.has(selected.id) && <span className={`rounded-full px-2.5 py-0.5 text-xs font-bold ${dark ? 'bg-accent-400/15 text-accent-300' : 'bg-accent-50 text-accent-700'}`}>{copy.badges.signatory}</span>}
               </div>
-              <p className={`mt-2 text-sm leading-6 ${muted}`}>{describe(selected)}</p>
-              <Link href="/market-access" className={`${dark ? button.accent : button.primary} mt-4 min-h-10 px-4`}>Check requirements</Link>
+              <p className={`mt-2 text-sm leading-6 ${muted}`}>{copy.describe[describeKey(selected.id)]}</p>
+              <Link href="/market-access" className={`${dark ? button.accent : button.primary} mt-4 min-h-10 px-4`}>{copy.check}</Link>
             </>
           ) : (
-            <p className={`text-sm leading-6 ${muted}`}>Select a country on the map or from the list to see which trade schemes may apply.</p>
+            <p className={`text-sm leading-6 ${muted}`}>{copy.empty}</p>
           )}
         </div>
       </div>
 
       <div ref={frame} className="relative mx-auto w-full max-w-[560px]">
-        <svg viewBox={MAP_VIEWBOX} className="h-auto w-full" role="img" aria-label={`Map of Africa highlighting ${mode === 'etls' ? `the ${counts.etls} ECOWAS member states where ETLS applies` : `the ${counts.afcfta} AfCFTA signatories`}.`}>
+        <svg viewBox={MAP_VIEWBOX} className="h-auto w-full" role="img" aria-label={fmt(copy.aria[mode], { count: mode === 'etls' ? counts.etls : counts.afcfta })}>
           <g aria-hidden="true">
-            {MAP_COUNTRIES.map(country =>
+            {countries.map(country =>
               country.d ? (
                 <path key={country.id} d={country.d} fill={fill(country)} stroke={colors.stroke} strokeWidth={1} className="cursor-pointer transition-[fill] duration-300" {...handlers(country)} />
               ) : (
@@ -183,20 +191,20 @@ export default function AfricaMarketsMap({ tone = 'dark', children }: { tone?: T
           </g>
         </svg>
 
-        {hover && (
+        {hover && hovered && (
           <div
             className="pointer-events-none absolute z-10 -translate-x-1/2 -translate-y-[130%] whitespace-nowrap rounded-input bg-ink-900 px-3 py-2 text-xs font-semibold text-white shadow-lg"
             style={{ left: `${hover.x}%`, top: `${hover.y}%` }}
           >
-            {hover.country.name}
-            {ECOWAS.has(hover.country.id) && <span className="ml-2 text-gold-300">ECOWAS</span>}
+            {hovered.name}
+            {ECOWAS.has(hovered.id) && <span className="ml-2 text-accent-300">{copy.badges.tooltipEcowas}</span>}
           </div>
         )}
 
         <ul className={`mt-4 flex flex-wrap justify-center gap-x-5 gap-y-2 text-xs font-semibold ${muted}`}>
-          <li className="flex items-center gap-2"><span className="h-3 w-3 rounded-sm" style={{ background: colors.member }} />{mode === 'etls' ? 'ECOWAS member' : 'AfCFTA signatory'}</li>
-          <li className="flex items-center gap-2"><span className="h-3 w-3 rounded-sm" style={{ background: colors.selected }} />Selected</li>
-          <li className="flex items-center gap-2"><span className="h-0.5 w-5 rounded" style={{ background: colors.route }} />Trade corridor</li>
+          <li className="flex items-center gap-2"><span className="h-3 w-3 rounded-sm" style={{ background: colors.member }} />{copy.legend[mode]}</li>
+          <li className="flex items-center gap-2"><span className="h-3 w-3 rounded-sm" style={{ background: colors.selected }} />{copy.legend.selected}</li>
+          <li className="flex items-center gap-2"><span className="h-0.5 w-5 rounded" style={{ background: colors.route }} />{copy.legend.corridor}</li>
         </ul>
       </div>
     </div>

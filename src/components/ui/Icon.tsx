@@ -36,7 +36,7 @@ export default function Icon({ name, className = 'h-5 w-5' }: { name: IconName; 
 
 export function IconBadge({ name, tone = 'light' }: { name: IconName; tone?: 'light' | 'dark' }) {
   return (
-    <span className={`card-icon inline-flex h-11 w-11 items-center justify-center rounded-input ${tone === 'dark' ? 'bg-white/10 text-gold-300' : 'bg-brand-50 text-brand-600'}`}>
+    <span className={`card-icon inline-flex h-11 w-11 items-center justify-center rounded-input ${tone === 'dark' ? 'bg-white/10 text-accent-300' : 'bg-brand-50 text-brand-600'}`}>
       <Icon name={name} />
     </span>
   )

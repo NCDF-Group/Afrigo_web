@@ -6,12 +6,14 @@ import Logo from '@/components/brand/Logo'
 import { button } from '@/components/ui/styles'
 import { useAuth } from '@/lib/auth'
 import { smoothScroll } from '@/lib/smoothScroll'
+import { useI18n } from '@/i18n/client'
 import { workspaceHref } from '@/lib/authRoutes'
 import { siteNav } from './nav'
 
 export default function SiteHeader() {
   const pathname = usePathname()
   const { user, isSignedIn } = useAuth()
+  const { t } = useI18n()
   const [open, setOpen] = useState(false)
 
   useEffect(() => setOpen(false), [pathname])
@@ -36,16 +38,16 @@ export default function SiteHeader() {
       <div className="mx-auto flex h-16 max-w-site items-center justify-between gap-6 px-4 sm:px-6 lg:h-[72px] lg:px-8">
         <Logo />
 
-        <nav aria-label="Main" className="hidden lg:block">
+        <nav aria-label={t.nav.main} className="hidden xl:block">
           <ul className="flex items-center gap-1">
             {siteNav.map(item => (
               <li key={item.href}>
                 <Link
                   href={item.href}
                   aria-current={isActive(item.href) ? 'page' : undefined}
-                  className={`relative block rounded-input px-3 py-2 text-[15px] font-semibold transition-colors hover:text-brand-600 ${isActive(item.href) ? 'text-brand-600 after:absolute after:inset-x-3 after:-bottom-[15px] after:h-0.5 after:bg-gold-500' : 'text-ink-700'}`}
+                  className={`relative block whitespace-nowrap rounded-input px-3 py-2 text-[15px] font-semibold transition-colors hover:text-brand-600 ${isActive(item.href) ? 'text-brand-600 after:absolute after:inset-x-3 after:-bottom-[15px] after:h-0.5 after:bg-accent-500' : 'text-ink-700'}`}
                 >
-                  {item.label}
+                  {t.nav.items[item.key]}
                 </Link>
               </li>
             ))}
@@ -54,26 +56,26 @@ export default function SiteHeader() {
 
         <div className="flex items-center gap-2">
           {isSignedIn ? (
-            <Link href={workspaceHref(user)} className={`${button.primary} hidden sm:inline-flex`}>
-              Open dashboard
+            <Link href={workspaceHref(user)} className={`${button.primary} hidden whitespace-nowrap sm:inline-flex`}>
+              {t.nav.openDashboard}
             </Link>
           ) : (
             <>
-              <Link href="/sign-in" className="rounded-input px-3 py-2 text-sm font-bold text-ink-900 hover:text-brand-600">
-                Sign in
+              <Link href="/sign-in" className="whitespace-nowrap rounded-input px-3 py-2 text-sm font-bold text-ink-900 hover:text-brand-600">
+                {t.nav.signIn}
               </Link>
-              <Link href="/register" className={`${button.primary} hidden sm:inline-flex`}>
-                Register your business
+              <Link href="/register" className={`${button.primary} hidden whitespace-nowrap sm:inline-flex`}>
+                {t.nav.register}
               </Link>
             </>
           )}
           <button
             type="button"
             onClick={() => setOpen(true)}
-            aria-label="Open menu"
+            aria-label={t.nav.openMenu}
             aria-expanded={open}
             aria-controls="mobile-menu"
-            className="inline-flex h-11 w-11 items-center justify-center rounded-input text-ink-900 hover:bg-subtle lg:hidden"
+            className="inline-flex h-11 w-11 items-center justify-center rounded-input text-ink-900 hover:bg-subtle xl:hidden"
           >
             <svg viewBox="0 0 24 24" className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
               <path d="M4 7h16M4 12h16M4 17h16" />
@@ -83,14 +85,14 @@ export default function SiteHeader() {
       </div>
 
       {open && (
-        <div id="mobile-menu" data-lenis-prevent role="dialog" aria-modal="true" aria-label="Menu" className="fixed inset-0 z-50 flex flex-col bg-white lg:hidden">
+        <div id="mobile-menu" data-lenis-prevent role="dialog" aria-modal="true" aria-label={t.nav.menu} className="fixed inset-0 z-50 flex flex-col bg-white xl:hidden">
           <div className="flex h-16 items-center justify-between border-b border-line px-4 sm:px-6">
             <Logo />
             <button
               type="button"
               autoFocus
               onClick={() => setOpen(false)}
-              aria-label="Close menu"
+              aria-label={t.nav.closeMenu}
               className="inline-flex h-11 w-11 items-center justify-center rounded-input text-ink-900 hover:bg-subtle"
             >
               <svg viewBox="0 0 24 24" className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
@@ -98,9 +100,9 @@ export default function SiteHeader() {
               </svg>
             </button>
           </div>
-          <nav aria-label="Mobile" className="flex-1 overflow-y-auto px-4 py-4 sm:px-6">
+          <nav aria-label={t.nav.mobile} className="flex-1 overflow-y-auto px-4 py-4 sm:px-6">
             <ul className="divide-y divide-line">
-              {[...siteNav, { href: '/contact', label: 'Contact us' }].map(item => (
+              {[...siteNav.map(item => ({ href: item.href, label: t.nav.items[item.key] })), { href: '/contact', label: t.nav.contact }].map(item => (
                 <li key={item.href}>
                   <Link
                     href={item.href}
@@ -115,11 +117,11 @@ export default function SiteHeader() {
           </nav>
           <div className="grid gap-3 border-t border-line p-4 pb-[max(1rem,env(safe-area-inset-bottom))] sm:px-6">
             {isSignedIn ? (
-              <Link href={workspaceHref(user)} className={button.primary}>Open dashboard</Link>
+              <Link href={workspaceHref(user)} className={button.primary}>{t.nav.openDashboard}</Link>
             ) : (
               <>
-                <Link href="/register" className={button.primary}>Register your business</Link>
-                <Link href="/sign-in" className={button.secondary}>Sign in</Link>
+                <Link href="/register" className={button.primary}>{t.nav.register}</Link>
+                <Link href="/sign-in" className={button.secondary}>{t.nav.signIn}</Link>
               </>
             )}
           </div>

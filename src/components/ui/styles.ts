@@ -3,7 +3,7 @@ const base =
 
 export const button = {
   primary: `${base} bg-brand-600 text-white hover:bg-brand-700`,
-  accent: `${base} bg-gold-500 text-brand-950 hover:bg-gold-400`,
+  accent: `${base} bg-accent-500 text-brand-950 hover:bg-accent-400`,
   secondary: `${base} border border-line bg-white text-ink-900 hover:border-line-strong hover:bg-subtle`,
   ghostLight: `${base} border border-white/30 text-white hover:border-white/60 hover:bg-white/10`,
   link: 'font-semibold text-brand-600 underline-offset-4 hover:underline'
