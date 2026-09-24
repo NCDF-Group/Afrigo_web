@@ -91,7 +91,7 @@ function SignInForm() {
       </form>
 
       <p className="mt-8 text-center text-[15px] text-ink-500">
-        New to AfriGoOS? <Link href="/register" className={button.link}>Register your business</Link>
+        New to Afrigo? <Link href="/register" className={button.link}>Register your business</Link>
       </p>
     </>
   )

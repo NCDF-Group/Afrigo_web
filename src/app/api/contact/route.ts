@@ -29,7 +29,7 @@ export async function POST(request: Request) {
     if (inbox) {
       const topicLabel = CONTACT_TOPICS.find(item => item.value === topic)?.label || topic
       const rows = [['Name', name], ['Email', email], ['Company', company || '—'], ['Country', country || '—'], ['Topic', topicLabel]]
-      const html = `<h2>New AfriGoOS contact enquiry</h2><table>${rows.map(([label, value]) => `<tr><td><strong>${label}</strong></td><td>${escape(value)}</td></tr>`).join('')}</table><p style="white-space:pre-wrap">${escape(message)}</p><p>Reference: ${ref.id}</p>`
+      const html = `<h2>New Afrigo contact enquiry</h2><table>${rows.map(([label, value]) => `<tr><td><strong>${label}</strong></td><td>${escape(value)}</td></tr>`).join('')}</table><p style="white-space:pre-wrap">${escape(message)}</p><p>Reference: ${ref.id}</p>`
       await sendTransactionalEmail([inbox], `Contact: ${topicLabel} — ${name}`, html).catch(error => console.error('Contact email failed', error))
     }
 

@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import { BRAND } from '@/lib/brand'
 
-// Placeholder mark until the final AfriGoOS logo is supplied — swap the <svg> for the real asset.
+// Placeholder mark until the final Afrigo logo is supplied — swap the <svg> for the real asset.
 export default function Logo({ tone = 'dark', href = '/', compact = false }: { tone?: 'dark' | 'light'; href?: string; compact?: boolean }) {
   const text = tone === 'light' ? 'text-white' : 'text-brand-900'
   return (
@@ -13,7 +13,7 @@ export default function Logo({ tone = 'dark', href = '/', compact = false }: { t
       </svg>
       {!compact && (
         <span className="font-display text-xl font-extrabold tracking-tight">
-          AfriGo<span className={tone === 'light' ? 'text-gold-400' : 'text-gold-600'}>OS</span>
+          Afri<span className={tone === 'light' ? 'text-gold-400' : 'text-gold-600'}>go</span>
         </span>
       )}
     </Link>

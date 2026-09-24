@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-/* AfriGoOS design tokens — see docs/design-foundation.md */
+/* Afrigo design tokens — see docs/design-foundation.md */
 :root {
   --color-bg: #FAFAF7;
   --color-surface: #FFFFFF;

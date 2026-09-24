@@ -7,7 +7,7 @@ import { BRAND } from '@/lib/brand'
 
 export const metadata: Metadata = {
   title: 'About',
-  description: 'AfriGoOS is an Africa-wide trade and market access platform developed by NCDF Group.'
+  description: 'Afrigo is an Africa-wide trade and market access platform developed by NCDF Group.'
 }
 
 const pillars: { title: string; text: string; icon: IconName }[] = [
@@ -34,15 +34,15 @@ export default function AboutPage() {
   return (
     <>
       <PageHero
-        overline="About AfriGoOS"
+        overline="About Afrigo"
         title="Making trade preparation and execution easy"
-        text="AfriGoOS is an Africa-wide trade and market access platform that helps businesses find markets, connect with trading partners and manage cross-border trade."
+        text="Afrigo is an Africa-wide trade and market access platform that helps businesses find markets, connect with trading partners and manage cross-border trade."
         image="/images/hero-about.webp"
         position="75% center"
       />
 
       <section className="mx-auto max-w-site px-4 py-20 sm:px-6 lg:px-8 lg:py-28">
-        <SectionHeading overline="What we do" title="One platform for the whole trade journey" text="Cross-border trade in Africa often depends on scattered contacts, unclear requirements and paperwork spread across chats and inboxes. AfriGoOS brings it together." />
+        <SectionHeading overline="What we do" title="One platform for the whole trade journey" text="Cross-border trade in Africa often depends on scattered contacts, unclear requirements and paperwork spread across chats and inboxes. Afrigo brings it together." />
         <div className="mt-12 grid gap-4 md:grid-cols-3">
           {pillars.map((item, index) => (
             <div key={item.title} data-reveal style={revealDelay(index)} className={card.light}>
@@ -72,7 +72,7 @@ export default function AboutPage() {
       <section id="ncdf-group" className="scroll-mt-20 bg-brand-900">
         <div className="mx-auto grid max-w-site gap-12 px-4 py-20 sm:px-6 lg:grid-cols-[1fr_1.2fr] lg:px-8 lg:py-28">
           <div>
-            <SectionHeading invert overline={BRAND.owner} title="Developed by NCDF Group" text="AfriGoOS is developed and operated by NCDF Group. The platform starts with selected West African markets and is designed for wider African coverage as pilot partners, markets and integrations are added." />
+            <SectionHeading invert overline={BRAND.owner} title="Developed by NCDF Group" text="Afrigo is developed and operated by NCDF Group. The platform starts with selected West African markets and is designed for wider African coverage as pilot partners, markets and integrations are added." />
             <Link href="/contact?topic=partnership" className={`${button.accent} mt-8`}>Partner with us</Link>
           </div>
           <ol className="space-y-4">
@@ -89,7 +89,7 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <CtaBand title="Join the first businesses on AfriGoOS" text="Register for the pilot, or talk to us about bringing your members or services onto the platform." />
+      <CtaBand title="Join the first businesses on Afrigo" text="Register for the pilot, or talk to us about bringing your members or services onto the platform." />
     </>
   )
 }

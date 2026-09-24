@@ -2,13 +2,13 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import LegalPage from '@/components/site/LegalPage'
 
-export const metadata: Metadata = { title: 'Privacy policy', description: 'How AfriGoOS collects, uses and protects business and personal information.' }
+export const metadata: Metadata = { title: 'Privacy policy', description: 'How Afrigo collects, uses and protects business and personal information.' }
 
 export default function PrivacyPage() {
   return (
     <LegalPage
       title="Privacy policy"
-      intro="How AfriGoOS, operated by NCDF Group, collects, uses and protects information about businesses and the people who work with them."
+      intro="How Afrigo, operated by NCDF Group, collects, uses and protects information about businesses and the people who work with them."
       updated="24 September 2026"
       sections={[
         {
@@ -31,7 +31,7 @@ export default function PrivacyPage() {
           title: 'Who can see your information',
           body: (
             <>
-              <p>Private records are only visible to people with explicit access: colleagues in your business, your counterparty on a trade case, and service partners assigned to a specific request. AfriGoOS administrators can access records to review content, provide support and keep the platform safe.</p>
+              <p>Private records are only visible to people with explicit access: colleagues in your business, your counterparty on a trade case, and service partners assigned to a specific request. Afrigo administrators can access records to review content, provide support and keep the platform safe.</p>
               <p>Listings you choose to make public show product information only — not your contact details.</p>
             </>
           )

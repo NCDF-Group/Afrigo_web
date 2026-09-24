@@ -54,7 +54,7 @@ const plans: { title: string; text: string; points: string[]; cta: { label: stri
   {
     title: 'Associations & groups',
     text: 'For cooperatives, associations and trade bodies onboarding many members.',
-    points: ['Onboarding support for member businesses', 'Guidance tailored to your sector', 'A dedicated contact at AfriGoOS'],
+    points: ['Onboarding support for member businesses', 'Guidance tailored to your sector', 'A dedicated contact at Afrigo'],
     cta: { label: 'Talk to us', href: '/contact?topic=partnership' }
   }
 ]
@@ -130,7 +130,7 @@ export default function ServicesPage() {
 
       <section className="bg-brand-900">
         <div className="mx-auto grid max-w-site gap-10 px-4 py-20 sm:px-6 lg:grid-cols-2 lg:items-center lg:px-8 lg:py-24">
-          <SectionHeading invert overline="Service partners" title="Offer your services on AfriGoOS" text="Logistics companies, inspection agencies and trade advisers can join as service partners and receive requests from active trade cases." />
+          <SectionHeading invert overline="Service partners" title="Offer your services on Afrigo" text="Logistics companies, inspection agencies and trade advisers can join as service partners and receive requests from active trade cases." />
           <div data-reveal className="flex flex-col gap-3 sm:flex-row lg:justify-end">
             <Link href="/contact?topic=partner" className={`${button.accent} min-h-12 px-7 text-[15px]`}>Apply as a partner</Link>
           </div>

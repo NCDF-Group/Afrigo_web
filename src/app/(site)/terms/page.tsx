@@ -1,19 +1,19 @@
 import type { Metadata } from 'next'
 import LegalPage from '@/components/site/LegalPage'
 
-export const metadata: Metadata = { title: 'Terms of use', description: 'The terms for using the AfriGoOS trade and market access platform.' }
+export const metadata: Metadata = { title: 'Terms of use', description: 'The terms for using the Afrigo trade and market access platform.' }
 
 export default function TermsPage() {
   return (
     <LegalPage
       title="Terms of use"
-      intro="The terms that apply when businesses, their teams and service partners use AfriGoOS, operated by NCDF Group."
+      intro="The terms that apply when businesses, their teams and service partners use Afrigo, operated by NCDF Group."
       updated="24 September 2026"
       sections={[
         {
           id: 'platform',
           title: 'The platform',
-          body: <p>AfriGoOS helps independent businesses find trade opportunities, communicate, and manage trade cases with their partners. AfriGoOS is not a party to trades agreed between users unless it says so in writing.</p>
+          body: <p>Afrigo helps independent businesses find trade opportunities, communicate, and manage trade cases with their partners. Afrigo is not a party to trades agreed between users unless it says so in writing.</p>
         },
         {
           id: 'accounts',
@@ -23,7 +23,7 @@ export default function TermsPage() {
         {
           id: 'guidance',
           title: 'Market-access guidance',
-          body: <p>ETLS and AfCFTA guidance is provided for preparation only. AfriGoOS does not issue official certificates and does not promise or guarantee duty-free access. Eligibility, duties and approvals are decided by customs and the competent authorities.</p>
+          body: <p>ETLS and AfCFTA guidance is provided for preparation only. Afrigo does not issue official certificates and does not promise or guarantee duty-free access. Eligibility, duties and approvals are decided by customs and the competent authorities.</p>
         },
         {
           id: 'services',
@@ -33,7 +33,7 @@ export default function TermsPage() {
         {
           id: 'conduct',
           title: 'Acceptable use',
-          body: <p>You may not misrepresent goods or businesses, try to access records you are not authorised to see, manipulate records, upload unlawful material, or use AfriGoOS communications outside a legitimate trade relationship. We may suspend accounts or remove content that breaks these terms.</p>
+          body: <p>You may not misrepresent goods or businesses, try to access records you are not authorised to see, manipulate records, upload unlawful material, or use Afrigo communications outside a legitimate trade relationship. We may suspend accounts or remove content that breaks these terms.</p>
         },
         {
           id: 'liability',

@@ -52,7 +52,7 @@ export default function HomePage() {
             </span>
           </h1>
           <p className="mt-6 max-w-xl text-lg leading-8 text-white/80">
-            AfriGoOS helps African businesses find markets, connect with trading partners and manage cross-border trade — from first enquiry to a tracked trade case.
+            Afrigo helps African businesses find markets, connect with trading partners and manage cross-border trade — from first enquiry to a tracked trade case.
           </p>
           <div className="mt-9 flex flex-col gap-3 sm:flex-row">
             <Link href="/register" className={`${button.accent} min-h-12 px-7 text-[15px]`}>Register your business</Link>
@@ -120,7 +120,7 @@ export default function HomePage() {
           </AfricaMarketsMap>
           <p data-reveal className="mt-10 flex gap-3 rounded-card border border-gold-400/30 bg-gold-400/10 p-4 text-sm leading-6 text-gold-100">
             <Icon name="shield" className="mt-0.5 h-5 w-5 shrink-0 text-gold-300" />
-            Guidance only. AfriGoOS does not issue official certificates or guarantee duty-free access — final decisions rest with the relevant authorities.
+            Guidance only. Afrigo does not issue official certificates or guarantee duty-free access — final decisions rest with the relevant authorities.
           </p>
         </div>
       </section>

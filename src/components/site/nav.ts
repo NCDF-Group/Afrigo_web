@@ -19,7 +19,7 @@ export const footerNav = [
   {
     title: 'Company',
     links: [
-      { href: '/about', label: 'About AfriGoOS' },
+      { href: '/about', label: 'About Afrigo' },
       { href: '/about#ncdf-group', label: 'NCDF Group' },
       { href: '/contact', label: 'Contact us' }
     ]

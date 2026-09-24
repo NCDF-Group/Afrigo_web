@@ -1,8 +1,9 @@
 'use client'
-import { useMemo, useRef, useState } from 'react'
+import { useCallback, useMemo, useRef, useState } from 'react'
 import Link from 'next/link'
 import { button } from '@/components/ui/styles'
 import { MAP_COUNTRIES, MAP_HUBS, MAP_VIEWBOX, type MapCountry } from './africaMapData'
+import CountryPicker from './CountryPicker'
 
 type Mode = 'etls' | 'afcfta'
 type Tone = 'dark' | 'light'
@@ -26,6 +27,9 @@ const PALETTE: Record<Tone, { base: string; member: string; hover: string; selec
   dark: { base: 'rgba(255,255,255,.07)', member: '#1B7F4E', hover: '#3F9E6C', selected: '#C9971A', stroke: '#072E1D', route: '#EDC555', hub: '#FFFFFF' },
   light: { base: '#E4E2D9', member: '#1B7F4E', hover: '#0B5634', selected: '#C9971A', stroke: '#FAFAF7', route: '#A87A12', hub: '#072E1D' }
 }
+
+// Nigeria, Ghana, Côte d'Ivoire, Senegal, Kenya, South Africa
+const QUICK_PICKS = ['566', '288', '384', '686', '404', '710']
 
 const inMode = (mode: Mode, id: string) => (mode === 'etls' ? ECOWAS.has(id) : !AFCFTA_NON_SIGNATORY.has(id))
 
@@ -51,6 +55,7 @@ export default function AfricaMarketsMap({ tone = 'dark', children }: { tone?: T
   const colors = PALETTE[tone]
   const dark = tone === 'dark'
 
+  const isMember = useCallback((id: string) => inMode(mode, id), [mode])
   const counts = useMemo(() => ({ etls: ECOWAS.size, afcfta: MAP_COUNTRIES.filter(country => !AFCFTA_NON_SIGNATORY.has(country.id)).length }), [])
 
   const fill = (country: MapCountry) => {
@@ -105,17 +110,18 @@ export default function AfricaMarketsMap({ tone = 'dark', children }: { tone?: T
           </div>
         </dl>
 
-        <label className="mt-6 block">
-          <span className={`mb-1.5 block text-sm font-semibold ${text}`}>Explore a country</span>
-          <select
-            value={selected?.id || ''}
-            onChange={event => setSelected(MAP_COUNTRIES.find(country => country.id === event.target.value) || null)}
-            className={`block min-h-12 w-full rounded-input border px-4 text-[15px] focus:outline-none focus:ring-4 ${dark ? 'border-white/15 bg-brand-950/60 text-white focus:ring-gold-400/30' : 'border-line bg-white text-ink-900 focus:ring-brand-600/10'}`}
-          >
-            <option value="">Select a country…</option>
-            {MAP_COUNTRIES.map(country => <option key={country.id} value={country.id}>{country.name}</option>)}
-          </select>
-        </label>
+        <div className="mt-6">
+          <CountryPicker
+            countries={MAP_COUNTRIES}
+            value={selected}
+            onChange={setSelected}
+            isMember={isMember}
+            memberLabel={mode === 'etls' ? 'ECOWAS members' : 'AfCFTA signatories'}
+            otherLabel={mode === 'etls' ? 'Other African countries' : 'Not a signatory'}
+            quickPicks={QUICK_PICKS}
+            dark={dark}
+          />
+        </div>
 
         <div aria-live="polite" className={`mt-4 min-h-[168px] rounded-card border p-5 ${panel}`}>
           {selected ? (

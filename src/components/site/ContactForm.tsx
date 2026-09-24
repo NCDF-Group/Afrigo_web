@@ -35,7 +35,7 @@ export default function ContactForm({ initialTopic }: { initialTopic: ContactTop
           <svg viewBox="0 0 24 24" className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5" /></svg>
         </span>
         <h2 className="mt-5 font-display text-2xl font-bold text-ink-900">Message received</h2>
-        <p className="mx-auto mt-2 max-w-sm text-[15px] leading-6 text-ink-500">Thank you for getting in touch. A member of the AfriGoOS team will reply to your email.</p>
+        <p className="mx-auto mt-2 max-w-sm text-[15px] leading-6 text-ink-500">Thank you for getting in touch. A member of the Afrigo team will reply to your email.</p>
         <button type="button" onClick={() => setStatus('idle')} className={`${button.secondary} mt-6`}>Send another message</button>
       </div>
     )

@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 const flow: { title: string; text: string; icon: IconName }[] = [
   { title: 'Tell us the trade', text: 'Choose the product, the country of origin and the destination country.', icon: 'pin' },
   { title: 'Get traceable guidance', text: 'See the applicable ETLS or AfCFTA requirements, each with its official reference and the date it was last reviewed.', icon: 'book' },
-  { title: 'Prepare and escalate', text: 'Upload origin evidence, track preparation tasks and escalate unresolved questions to the AfriGoOS team.', icon: 'clipboard' }
+  { title: 'Prepare and escalate', text: 'Upload origin evidence, track preparation tasks and escalate unresolved questions to the Afrigo team.', icon: 'clipboard' }
 ]
 
 const schemes = [
@@ -77,7 +77,7 @@ export default function MarketAccessPage() {
 
       <section className="bg-brand-900">
         <div className="mx-auto max-w-site px-4 py-20 sm:px-6 lg:px-8 lg:py-28">
-          <SectionHeading invert overline="Trade schemes" title="Separate workflows for ETLS and AfCFTA" text="The two schemes have different eligibility, evidence and approval steps, so AfriGoOS keeps them apart." />
+          <SectionHeading invert overline="Trade schemes" title="Separate workflows for ETLS and AfCFTA" text="The two schemes have different eligibility, evidence and approval steps, so Afrigo keeps them apart." />
           <div className="mt-12 grid gap-4 lg:grid-cols-2">
             {schemes.map((scheme, index) => (
               <article key={scheme.id} id={scheme.id} data-reveal style={revealDelay(index)} className={`${card.dark} p-7 lg:p-8`}>
@@ -109,11 +109,11 @@ export default function MarketAccessPage() {
         <div data-reveal className="rounded-card border-2 border-gold-400 bg-gold-50 p-7">
           <div className="flex items-center gap-3">
             <Icon name="shield" className="h-6 w-6 text-gold-700" />
-            <h3 className="font-display text-lg font-bold text-ink-900">What AfriGoOS does not do</h3>
+            <h3 className="font-display text-lg font-bold text-ink-900">What Afrigo does not do</h3>
           </div>
           <ul className="mt-5 space-y-3 text-[15px] leading-6 text-ink-700">
-            <CheckItem>AfriGoOS does not issue certificates of origin or any other official certificate.</CheckItem>
-            <CheckItem>AfriGoOS never promises or guarantees duty-free access.</CheckItem>
+            <CheckItem>Afrigo does not issue certificates of origin or any other official certificate.</CheckItem>
+            <CheckItem>Afrigo never promises or guarantees duty-free access.</CheckItem>
             <CheckItem>Eligibility and duties are decided by customs and the competent authorities in each country.</CheckItem>
           </ul>
           <p className="mt-5 text-sm leading-6 text-ink-500">Guidance shows its official reference and last-review date. Always confirm requirements with the relevant authority before shipping.</p>

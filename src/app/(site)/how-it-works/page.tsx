@@ -6,7 +6,7 @@ import { CheckItem, CtaBand, PageHero, SectionHeading, revealDelay } from '@/com
 
 export const metadata: Metadata = {
   title: 'How it works',
-  description: 'Register, publish or search, enquire, open a trade case and track progress — the AfriGoOS trade journey.'
+  description: 'Register, publish or search, enquire, open a trade case and track progress — the Afrigo trade journey.'
 }
 
 const steps: { title: string; text: string; icon: IconName; points: string[] }[] = [
@@ -46,14 +46,14 @@ const roles: { title: string; text: string; icon: IconName }[] = [
   { title: 'Business administrator', text: 'Manages the organisation, its colleagues and its business records.', icon: 'building' },
   { title: 'Business team member', text: 'Works on the enquiries, documents and trade cases they are authorised for.', icon: 'users' },
   { title: 'Service partner', text: 'Views and updates only the service requests assigned to them.', icon: 'truck' },
-  { title: 'AfriGoOS administrator', text: 'Reviews businesses and content, manages guidance and oversees operations.', icon: 'shield' }
+  { title: 'Afrigo administrator', text: 'Reviews businesses and content, manages guidance and oversees operations.', icon: 'shield' }
 ]
 
 const faqs = [
   { q: 'Who can register?', a: 'Exporters, importers, manufacturers, cooperatives, aggregators and trade-service providers operating in supported markets. Businesses are reviewed before their listings go live.' },
   { q: 'Can my business both buy and sell?', a: 'Yes. A business can publish products and post buyer requests from the same account — there is no need to pick one role.' },
-  { q: 'Which countries are supported?', a: 'AfriGoOS launches with selected West African markets and is designed to add wider African coverage. See Market access for the current list.' },
-  { q: 'Does AfriGoOS issue certificates of origin?', a: 'No. AfriGoOS provides traceable guidance and helps you prepare evidence, but official certificates are issued by the relevant authorities and duty-free access is never guaranteed.' },
+  { q: 'Which countries are supported?', a: 'Afrigo launches with selected West African markets and is designed to add wider African coverage. See Market access for the current list.' },
+  { q: 'Does Afrigo issue certificates of origin?', a: 'No. Afrigo provides traceable guidance and helps you prepare evidence, but official certificates are issued by the relevant authorities and duty-free access is never guaranteed.' },
   { q: 'Who can see my records?', a: 'Private records are only visible to people you explicitly give access to: your colleagues, your trading partner on a trade case, and service partners assigned to a request.' },
   { q: 'What does it cost?', a: 'See Services & pricing for current packages and how partner services are quoted.' }
 ]
@@ -64,7 +64,7 @@ export default function HowItWorksPage() {
       <PageHero
         overline="How it works"
         title="From registration to a tracked trade case"
-        text="AfriGoOS brings every stage of cross-border trade into one connected journey, so nothing gets lost between the first enquiry and delivery."
+        text="Afrigo brings every stage of cross-border trade into one connected journey, so nothing gets lost between the first enquiry and delivery."
         image="/images/hero-how-it-works.webp"
         position="70% center"
       >
@@ -95,7 +95,7 @@ export default function HowItWorksPage() {
 
       <section className="bg-brand-900">
         <div className="mx-auto grid max-w-site gap-12 px-4 py-20 sm:px-6 lg:grid-cols-[1fr_1.2fr] lg:items-center lg:px-8 lg:py-28">
-          <SectionHeading invert overline="Buy, sell or both" title="One business, every side of the trade" text="Many African businesses buy inputs and sell finished goods. On AfriGoOS the same account can publish products, post buyer requests and run trade cases on either side." />
+          <SectionHeading invert overline="Buy, sell or both" title="One business, every side of the trade" text="Many African businesses buy inputs and sell finished goods. On Afrigo the same account can publish products, post buyer requests and run trade cases on either side." />
           <div className="grid gap-4 sm:grid-cols-2">
             {[
               { title: 'Selling', text: 'Publish products and supply, answer buyer requests and send quotations.', icon: 'package' as const },

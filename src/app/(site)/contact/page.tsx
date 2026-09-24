@@ -8,7 +8,7 @@ import { isContactTopic } from '@/lib/contactTopics'
 
 export const metadata: Metadata = {
   title: 'Contact us',
-  description: 'Talk to the AfriGoOS team about registering your business, market access, partnerships or support.'
+  description: 'Talk to the Afrigo team about registering your business, market access, partnerships or support.'
 }
 
 const reasons: { title: string; text: string; icon: IconName }[] = [
@@ -25,7 +25,7 @@ export default async function ContactPage({ searchParams }: { searchParams: Prom
     <>
       <PageHero
         overline="Contact us"
-        title="Talk to the AfriGoOS team"
+        title="Talk to the Afrigo team"
         text="Tell us about your business and what you trade. We'll point you to the right next step."
         image="/images/hero-contact.webp"
         position="65% center"
