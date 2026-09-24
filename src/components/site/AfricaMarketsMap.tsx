@@ -220,7 +220,6 @@ export default function AfricaMarketsMap({ tone = 'dark', children }: { tone?: T
           <li className="flex items-center gap-2"><span className="h-3 w-3 rounded-sm" style={{ background: colors.selected }} />{copy.legend.selected}</li>
           <li className="flex items-center gap-2"><span className="h-0.5 w-5 rounded" style={{ background: colors.route }} />{copy.legend.corridor}</li>
         </ul>
-
       </div>
     </div>
   )
