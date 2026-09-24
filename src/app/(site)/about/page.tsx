@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import Image from 'next/image'
 import Link from 'next/link'
 import { IconBadge, type IconName } from '@/components/ui/Icon'
 import { button, card } from '@/components/ui/styles'
@@ -50,20 +51,23 @@ export default async function AboutPage() {
         </div>
       </section>
 
-      <section id="ncdf-group" className="scroll-mt-20 bg-brand-900">
-        <div className="mx-auto grid max-w-site gap-12 px-4 py-20 sm:px-6 lg:grid-cols-[1fr_1.2fr] lg:px-8 lg:py-28">
-          <div>
+      <section id="ncdf-group" className="relative isolate scroll-mt-20 overflow-hidden bg-brand-900">
+        {/* Photo as section background; the scrim keeps text and cards at readable contrast. */}
+        <div aria-hidden="true" className="absolute inset-0 -z-10">
+          <Image src="/images/about-ncdf.webp" alt="" fill sizes="100vw" quality={70} className="object-cover object-[center_30%]" />
+          <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(1,26,21,.94)_0%,rgba(1,26,21,.82)_45%,rgba(1,26,21,.6)_100%)] max-lg:bg-[rgba(1,26,21,.86)]" />
+        </div>
+        <div className="mx-auto max-w-site px-4 py-20 sm:px-6 lg:px-8 lg:py-32">
+          <div className="max-w-2xl">
             <SectionHeading invert overline={BRAND.owner} title={copy.ncdf.title} text={copy.ncdf.text} />
             <Link href="/contact?topic=partnership" className={`${button.accent} mt-8`}>{copy.ncdf.partner}</Link>
           </div>
-          <ol className="space-y-4">
+          <ol className="mt-14 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {copy.ncdf.roadmap.map((step, index) => (
-              <li key={index} data-reveal style={revealDelay(index)} className={`${card.dark} flex gap-5`}>
-                <span className="font-display text-2xl font-bold text-accent-300">0{index + 1}</span>
-                <div>
-                  <h3 className="font-display text-lg font-semibold text-white">{step.title}</h3>
-                  <p className="mt-1 text-[15px] leading-6 text-white/70">{step.text}</p>
-                </div>
+              <li key={index} data-reveal style={revealDelay(index)} className={`${card.dark} flex flex-col bg-brand-950/55 backdrop-blur-md`}>
+                <span className="font-display text-3xl font-bold text-accent-300">0{index + 1}</span>
+                <h3 className="mt-4 font-display text-lg font-semibold text-white">{step.title}</h3>
+                <p className="mt-2 text-[15px] leading-6 text-white/70">{step.text}</p>
               </li>
             ))}
           </ol>

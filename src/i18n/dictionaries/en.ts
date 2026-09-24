@@ -386,6 +386,7 @@ export const en = {
     empty: 'Select a country on the map or from the list to see which trade schemes may apply.',
     aria: { etls: 'Map of Africa highlighting the {count} ECOWAS member states where ETLS applies.', afcfta: 'Map of Africa highlighting the {count} AfCFTA signatories.' },
     legend: { etls: 'ECOWAS member', afcfta: 'AfCFTA signatory', selected: 'Selected', corridor: 'Trade corridor' },
+    regions: { north: 'North Africa', west: 'West Africa', central: 'Central Africa', east: 'East Africa', south: 'Southern Africa' },
     picker: {
       label: 'Explore a country',
       placeholder: 'Search {count} countries…',

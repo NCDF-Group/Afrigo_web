@@ -388,6 +388,7 @@ export const fr: Dictionary = {
     empty: 'Sélectionnez un pays sur la carte ou dans la liste pour voir les régimes commerciaux susceptibles de s’appliquer.',
     aria: { etls: 'Carte de l’Afrique mettant en évidence les {count} États membres de la CEDEAO où le SLE s’applique.', afcfta: 'Carte de l’Afrique mettant en évidence les {count} signataires de la ZLECAf.' },
     legend: { etls: 'Membre de la CEDEAO', afcfta: 'Signataire de la ZLECAf', selected: 'Sélectionné', corridor: 'Corridor commercial' },
+    regions: { north: 'Afrique du Nord', west: 'Afrique de l’Ouest', central: 'Afrique centrale', east: 'Afrique de l’Est', south: 'Afrique australe' },
     picker: {
       label: 'Explorer un pays',
       placeholder: 'Rechercher parmi {count} pays…',

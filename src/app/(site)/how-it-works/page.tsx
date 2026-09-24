@@ -78,22 +78,22 @@ export default async function HowItWorksPage() {
       </section>
 
       <section className="border-t border-line bg-white">
-        <div className="mx-auto grid max-w-site gap-12 px-4 py-20 sm:px-6 lg:grid-cols-[1fr_1.4fr] lg:px-8 lg:py-28">
-          <SectionHeading overline={copy.faq.overline} title={copy.faq.title} />
-          <div className="divide-y divide-line border-y border-line">
+        <div className="mx-auto max-w-3xl px-4 py-20 sm:px-6 lg:px-8 lg:py-28">
+          <SectionHeading center overline={copy.faq.overline} title={copy.faq.title} />
+          <div className="mt-12 divide-y divide-line border-y border-line text-left">
             {copy.faq.items.map((item, index) => (
               <details key={index} className="group py-5">
                 <summary className="flex cursor-pointer list-none items-center justify-between gap-4 font-display text-lg font-semibold text-ink-900 [&::-webkit-details-marker]:hidden">
                   {item.q}
                   <span aria-hidden="true" className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-subtle text-xl leading-none text-brand-600 transition-transform duration-300 group-open:rotate-45">+</span>
                 </summary>
-                <p className="mt-3 max-w-2xl text-[15px] leading-7 text-ink-500">{item.a}</p>
+                <p className="mt-3 text-[15px] leading-7 text-ink-500">{item.a}</p>
               </details>
             ))}
-            <p className="py-5 text-[15px] text-ink-500">
-              {copy.faq.still} <Link href="/contact" className={button.link}>{copy.faq.contactLink}</Link>
-            </p>
           </div>
+          <p className="mt-8 text-center text-[15px] text-ink-500">
+            {copy.faq.still} <Link href="/contact" className={button.link}>{copy.faq.contactLink}</Link>
+          </p>
         </div>
       </section>
 

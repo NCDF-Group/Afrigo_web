@@ -4,6 +4,8 @@ import Link from 'next/link'
 import { button } from '@/components/ui/styles'
 import { MAP_COUNTRIES, MAP_HUBS, MAP_VIEWBOX, type MapCountry } from './africaMapData'
 import CountryPicker from './CountryPicker'
+import Flag from './Flag'
+import { COUNTRY_META } from './africaCountryMeta'
 import { useI18n } from '@/i18n/client'
 import { fmt, INTL_LOCALE } from '@/i18n/config'
 
@@ -135,7 +137,9 @@ export default function AfricaMarketsMap({ tone = 'dark', children }: { tone?: T
           {selected ? (
             <>
               <div className="flex flex-wrap items-center gap-2">
+                <Flag id={selected.id} className="h-6 w-9" />
                 <h3 className={`font-display text-xl font-bold ${text}`}>{selected.name}</h3>
+                <span className={`rounded-full border px-2.5 py-0.5 text-xs font-semibold ${dark ? 'border-white/15 text-white/75' : 'border-line text-ink-500'}`}>{copy.regions[COUNTRY_META[selected.id].region]}</span>
                 {ECOWAS.has(selected.id) && <span className={`rounded-full px-2.5 py-0.5 text-xs font-bold ${dark ? 'bg-brand-500/25 text-brand-200' : 'bg-brand-50 text-brand-700'}`}>{copy.badges.ecowas}</span>}
                 {!AFCFTA_NON_SIGNATORY.has(selected.id) && <span className={`rounded-full px-2.5 py-0.5 text-xs font-bold ${dark ? 'bg-accent-400/15 text-accent-300' : 'bg-accent-50 text-accent-700'}`}>{copy.badges.signatory}</span>}
               </div>
@@ -193,11 +197,21 @@ export default function AfricaMarketsMap({ tone = 'dark', children }: { tone?: T
 
         {hover && hovered && (
           <div
-            className="pointer-events-none absolute z-10 -translate-x-1/2 -translate-y-[130%] whitespace-nowrap rounded-input bg-ink-900 px-3 py-2 text-xs font-semibold text-white shadow-lg"
+            role="tooltip"
+            // Anchor the card to the cursor, flipping sideways near the map edges so it never leaves the frame.
+            className={`pointer-events-none absolute z-10 -translate-y-[calc(100%+14px)] ${hover.x > 65 ? '-translate-x-full' : hover.x < 35 ? '' : '-translate-x-1/2'}`}
             style={{ left: `${hover.x}%`, top: `${hover.y}%` }}
           >
-            {hovered.name}
-            {ECOWAS.has(hovered.id) && <span className="ml-2 text-accent-300">{copy.badges.tooltipEcowas}</span>}
+            <div className="flex min-w-[180px] items-center gap-3 rounded-card bg-ink-900/95 px-3 py-2.5 text-white shadow-lg ring-1 ring-white/10 backdrop-blur">
+              <Flag id={hovered.id} className="h-6 w-9" />
+              <div className="leading-tight">
+                <p className="whitespace-nowrap text-sm font-bold">{hovered.name}</p>
+                <p className="mt-0.5 whitespace-nowrap text-xs text-white/70">
+                  {copy.regions[COUNTRY_META[hovered.id].region]}
+                  {ECOWAS.has(hovered.id) && <span className="ml-1.5 font-semibold text-accent-300">· {copy.badges.tooltipEcowas}</span>}
+                </p>
+              </div>
+            </div>
           </div>
         )}
 
@@ -206,6 +220,7 @@ export default function AfricaMarketsMap({ tone = 'dark', children }: { tone?: T
           <li className="flex items-center gap-2"><span className="h-3 w-3 rounded-sm" style={{ background: colors.selected }} />{copy.legend.selected}</li>
           <li className="flex items-center gap-2"><span className="h-0.5 w-5 rounded" style={{ background: colors.route }} />{copy.legend.corridor}</li>
         </ul>
+
       </div>
     </div>
   )

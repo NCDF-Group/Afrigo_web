@@ -1,6 +1,7 @@
 'use client'
 import { useEffect, useId, useMemo, useRef, useState } from 'react'
 import type { MapCountry } from './africaMapData'
+import Flag from './Flag'
 import { useI18n } from '@/i18n/client'
 import { fmt } from '@/i18n/config'
 
@@ -106,9 +107,13 @@ export default function CountryPicker({ countries, value, onChange, isMember, me
     <div ref={root}>
       <label htmlFor={`${id}-input`} className={`mb-1.5 block text-sm font-semibold ${dark ? 'text-white' : 'text-ink-900'}`}>{copy.label}</label>
       <div className="relative">
-        <svg viewBox="0 0 24 24" className={`pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 ${muted}`} fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
-          <circle cx="11" cy="11" r="7" /><path d="m20 20-3.5-3.5" />
-        </svg>
+        {value && !open ? (
+          <span className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2"><Flag id={value.id} className="h-4 w-6" /></span>
+        ) : (
+          <svg viewBox="0 0 24 24" className={`pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 ${muted}`} fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
+            <circle cx="11" cy="11" r="7" /><path d="m20 20-3.5-3.5" />
+          </svg>
+        )}
         <input
           ref={input}
           id={`${id}-input`}
@@ -125,7 +130,7 @@ export default function CountryPicker({ countries, value, onChange, isMember, me
           onClick={() => !open && openList()}
           onChange={event => { setQuery(open ? event.target.value : event.target.value.replace(value?.name || '', '')); setActive(0); if (!open) setOpen(true) }}
           onKeyDown={onKeyDown}
-          className={`block min-h-12 w-full rounded-input border pl-11 pr-20 text-[15px] transition-colors focus:outline-none focus:ring-4 ${field}`}
+          className={`block min-h-12 w-full rounded-input border pl-12 pr-20 text-[15px] transition-colors focus:outline-none focus:ring-4 ${field}`}
         />
         <div className="absolute inset-y-0 right-2 flex items-center gap-1">
           {value && (
@@ -164,7 +169,7 @@ export default function CountryPicker({ countries, value, onChange, isMember, me
                           onClick={() => choose(country)}
                           className={`mx-2 flex cursor-pointer items-center gap-3 rounded-input px-3 py-2.5 text-[15px] ${isActive ? (dark ? 'bg-white/10' : 'bg-subtle') : ''}`}
                         >
-                          <span aria-hidden="true" className={`h-2.5 w-2.5 shrink-0 rounded-full ${isMember(country.id) ? 'bg-brand-500' : dark ? 'bg-white/20' : 'bg-line-strong'}`} />
+                          <Flag id={country.id} className="h-4 w-6" />
                           <span className="flex-1 font-medium"><Highlight text={country.name} query={query} /></span>
                           {isSelected && (
                             <svg viewBox="0 0 24 24" className={`h-4 w-4 ${dark ? 'text-accent-300' : 'text-brand-600'}`} fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5" /></svg>
@@ -188,7 +193,8 @@ export default function CountryPicker({ countries, value, onChange, isMember, me
           if (!country) return null
           const on = value?.id === country.id
           return (
-            <button key={pickId} type="button" aria-pressed={on} onClick={() => onChange(on ? null : country)} className={`rounded-full border px-3 py-1 text-xs font-semibold transition-colors ${on ? chipActive : chip}`}>
+            <button key={pickId} type="button" aria-pressed={on} onClick={() => onChange(on ? null : country)} className={`inline-flex items-center gap-1.5 rounded-full border py-1 pl-1.5 pr-3 text-xs font-semibold transition-colors ${on ? chipActive : chip}`}>
+              <Flag id={country.id} className="h-3 w-[18px]" />
               {country.name}
             </button>
           )
