@@ -1,8 +1,9 @@
+import { features, featureDisabled } from '@/lib/features'
 import { jsonError } from '@/lib/serverAuth'
 import { requireStaff } from '@/lib/staffAuth'
 import { rateLimit } from '@/lib/rateLimit'
 
-export async function POST(request:Request){try{
+export async function POST(request:Request){if(!features.payments)return featureDisabled();try{
   rateLimit(request,'refund-approval',10);const {user,admin}=await requireStaff(request,'refunds:execute'),input=await request.json(),contractRef=admin.db.collection('contracts').doc(String(input.contractId||'')),contract=await contractRef.get(),data=contract.data()
   if(!contract.exists||data?.refundStatus!=='requested')return Response.json({ok:false,error:'No pending refund request exists'},{status:409})
   if(input.decision==='reject'){await contractRef.update({refundStatus:'rejected',refundReviewedBy:user.id,refundReviewReason:String(input.reason||'').slice(0,500),updatedAt:new Date()});return Response.json({ok:true,status:'rejected'})}

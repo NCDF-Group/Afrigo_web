@@ -1,18 +1,27 @@
+import type { Metadata, Viewport } from 'next'
+import { Manrope, Montserrat } from 'next/font/google'
 import './globals.css'
-import Header from '../components/Header'
+import { BRAND } from '@/lib/brand'
 
-export const metadata = {
-  title: 'Afrigo | African trade without the friction',
-  description: 'Controlled trade infrastructure connecting verified Buyers, inventory-backed Sellers and accountable Exporters from RFQ to settlement.'
+const manrope = Manrope({ subsets: ['latin', 'latin-ext'], variable: '--font-sans', display: 'swap' })
+const montserrat = Montserrat({ subsets: ['latin', 'latin-ext'], weight: ['600', '700', '800'], variable: '--font-display', display: 'swap' })
+
+export const metadata: Metadata = {
+  title: { default: `${BRAND.name} | ${BRAND.tagline}`, template: `%s | ${BRAND.name}` },
+  description: BRAND.description,
+  applicationName: BRAND.name
+}
+
+export const viewport: Viewport = {
+  themeColor: '#072E1D',
+  width: 'device-width',
+  initialScale: 1
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
-      <body className="h-full bg-[var(--afrigo-bg)] text-[var(--afrigo-text)]">
-        <Header />
-        <main className="mx-auto w-full max-w-[1600px] px-3 py-5 sm:px-6 lg:px-8">{children}</main>
-      </body>
+    <html lang="en" className={`${manrope.variable} ${montserrat.variable}`}>
+      <body className="min-h-screen bg-canvas font-sans text-ink-900">{children}</body>
     </html>
   )
 }

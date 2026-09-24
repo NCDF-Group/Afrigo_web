@@ -1,42 +1,37 @@
 'use client'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { motion } from 'framer-motion'
+import Logo from '@/components/brand/Logo'
+import { button } from '@/components/ui/styles'
 import { useAuth } from '@/lib/auth'
+import { workspaceHref } from '@/lib/authRoutes'
 
-const MotionButton = motion.button as any
-
+// Interim workspace header — replaced by the business-app shell (sidebar + bottom tabs).
 export default function Header() {
   const { user, isSignedIn, signOut } = useAuth()
   const router = useRouter()
 
   return (
-    <header className="sticky top-0 z-30 bg-[var(--afrigo-surface)]/95 backdrop-blur-xl shadow-sm border-b border-[var(--afrigo-border)]">
-      <div className="container mx-auto flex flex-wrap items-center justify-between gap-3 p-4">
-        <Link href="/" className="flex items-center gap-3 text-xl font-semibold text-[var(--afrigo-primary-green)]">
-          <span className="inline-flex h-11 w-11 items-center justify-center rounded-3xl bg-[var(--afrigo-primary-green-light)] text-2xl">A</span>
-          Afrigo
-        </Link>
+    <header className="sticky top-0 z-30 border-b border-line bg-white/95 backdrop-blur">
+      <div className="mx-auto flex h-16 max-w-app items-center justify-between gap-3 px-4 sm:px-6 lg:px-8">
+        <Logo href={isSignedIn ? workspaceHref(user) : '/'} />
 
-        <div className="flex items-center gap-2 sm:gap-3">
-          {isSignedIn ? (
-            <>
-              {(user?.operationalRole||user?.email?.toLowerCase()==='ukwun97@gmail.com')&&<Link href="/admin/operations" className="rounded-2xl bg-slate-900 px-3 py-2 text-sm font-semibold text-white transition hover:-translate-y-0.5">Operations</Link>}
-              <Link href={user?.role?'/dashboard':'/role-selection'} className="rounded-2xl bg-[var(--afrigo-primary-green)] px-4 py-2 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:bg-[var(--afrigo-primary-green-hover)]">{user?.role?'Dashboard':'Choose role'}</Link>
-              <MotionButton
-                whileHover={{ y: -1 }}
-                whileTap={{ scale: 0.98 }}
-                aria-label={`Sign out ${user?.displayName||'account'}`}
-                className="rounded-2xl border border-[var(--afrigo-border)] bg-white px-3 py-2 text-sm font-semibold text-[var(--afrigo-text)] transition hover:bg-[var(--afrigo-bg)] sm:px-4"
-                onClick={() => {
-                  void signOut().then(() => router.push('/'))
-                }}
-              >
-                Sign out
-              </MotionButton>
-            </>
-          ) : null}
-        </div>
+        {isSignedIn ? (
+          <div className="flex items-center gap-2">
+            {(user?.operationalRole || user?.email?.toLowerCase() === 'ukwun97@gmail.com') && (
+              <Link href="/admin/operations" className={`${button.secondary} hidden sm:inline-flex`}>Operations</Link>
+            )}
+            <Link href={workspaceHref(user)} className={button.primary}>{user?.role ? 'Dashboard' : 'Choose role'}</Link>
+            <button
+              type="button"
+              aria-label={`Sign out ${user?.displayName || 'account'}`}
+              className={button.secondary}
+              onClick={() => void signOut().then(() => router.push('/'))}
+            >
+              Sign out
+            </button>
+          </div>
+        ) : null}
       </div>
     </header>
   )

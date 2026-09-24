@@ -2,100 +2,162 @@
 @tailwind components;
 @tailwind utilities;
 
+/* AfriGoOS design tokens — see docs/design-foundation.md */
 :root {
-  --afrigo-primary-green: #0F5B46;
-  --afrigo-primary-green-hover: #0A4335;
-  --afrigo-primary-green-light: #1A8A67;
-  --afrigo-secondary-gold: #C89B3C;
-  --afrigo-accent-blue: #1E88E5;
-  --afrigo-success: #12B76A;
-  --afrigo-success-light: #E6F6EC;
-  --afrigo-warning: #F79009;
-  --afrigo-error: #F04438;
-  --afrigo-error-light: #FFE0DD;
-  --afrigo-bg: #F7F8FA;
-  --afrigo-surface: #FFFFFF;
-  --afrigo-text: #111827;
-  --afrigo-text-secondary: #667085;
-  --afrigo-border: #E4E7EC;
-  --afrigo-divider: #D0D5DD;
-  --afrigo-disabled: #A0AEC0;
-  --afrigo-transition: 280ms cubic-bezier(0.4, 0, 0.2, 1);
+  --color-bg: #FAFAF7;
+  --color-surface: #FFFFFF;
+  --color-surface-subtle: #F3F2EC;
+  --color-border: #E4E2D9;
+  --color-border-strong: #CBC8BC;
+  --color-text: #111A15;
+  --color-text-muted: #5F6D65;
+  --color-text-faint: #8B968F;
+  --color-primary: #0E6A3F;
+  --color-primary-hover: #0B5634;
+  --color-primary-soft: #EEF7F1;
+  --color-on-primary: #FFFFFF;
+  --color-accent: #C9971A;
+  --color-accent-hover: #E3B02E;
+  --color-on-accent: #041C12;
+  --color-accent-text: #86600F;
+  --color-inverse-bg: #072E1D;
+  --color-focus: #E3B02E;
+  --color-success: #15803D;
+  --color-warning: #B45309;
+  --color-danger: #B91C1C;
+  --color-info: #1D4ED8;
+
+  /* Legacy aliases — keep until the workspace screens are rebuilt on the tokens above */
+  --afrigo-primary-green: var(--color-primary);
+  --afrigo-primary-green-hover: var(--color-primary-hover);
+  --afrigo-primary-green-light: #1B7F4E;
+  --afrigo-secondary-gold: var(--color-accent-text);
+  --afrigo-accent-blue: var(--color-info);
+  --afrigo-success: var(--color-success);
+  --afrigo-success-light: #DCFCE7;
+  --afrigo-warning: var(--color-warning);
+  --afrigo-error: var(--color-danger);
+  --afrigo-error-light: #FEE2E2;
+  --afrigo-bg: var(--color-bg);
+  --afrigo-surface: var(--color-surface);
+  --afrigo-text: var(--color-text);
+  --afrigo-text-secondary: var(--color-text-muted);
+  --afrigo-border: var(--color-border);
+  --afrigo-divider: var(--color-border-strong);
+  --afrigo-disabled: var(--color-text-faint);
+  --afrigo-transition: 200ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-html, body, #__next {
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+}
+
+html, body {
   min-height: 100%;
 }
 
 body {
-  background: var(--afrigo-bg);
-  color: var(--afrigo-text);
-  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-sans), ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-display), var(--font-sans), ui-sans-serif, system-ui, sans-serif;
 }
 
 button, a, input, select, textarea { -webkit-tap-highlight-color: transparent; }
 button, a { touch-action: manipulation; }
-:focus-visible { outline: 3px solid rgba(30, 136, 229, .28); outline-offset: 3px; }
 
-::selection {
-  background: var(--afrigo-secondary-gold);
-  color: white;
-}
-
-button,
-input,
-select,
-textarea {
-  transition: background-color var(--afrigo-transition), color var(--afrigo-transition), border-color var(--afrigo-transition), transform var(--afrigo-transition), box-shadow var(--afrigo-transition);
-}
-
-.afrigo-card {
-  background: var(--afrigo-surface);
-  border: 1px solid var(--afrigo-border);
-  box-shadow: 0 8px 30px rgba(17, 24, 39, 0.06);
-  border-radius: 1.5rem;
-}
-
-.afrigo-pill {
-  border-radius: 999px;
-}
-
-.afrigo-icon-button {
-  background: rgba(15, 91, 70, 0.08);
-  color: var(--afrigo-primary-green);
-}
-
-.afrigo-icon-button:hover {
-  background: rgba(15, 91, 70, 0.14);
-  transform: translateY(-1px);
-}
-
-.afrigo-card-hover:hover {
-  transform: translateY(-2px);
-}
-
-.afrigo-emphasis {
-  color: var(--afrigo-primary-green);
-}
-
-.afrigo-pressable {
-  will-change: transform, box-shadow;
-}
-
-.afrigo-pressable:active {
-  transform: translateY(1px) scale(0.996);
-  box-shadow: 0 6px 18px rgba(17,24,39,0.06);
-}
-
-.afrigo-focus-visible:focus {
-  outline: 3px solid rgba(30,136,229,0.12);
+:focus-visible {
+  outline: 3px solid var(--color-focus);
   outline-offset: 2px;
 }
 
+::selection {
+  background: #F4DB8C;
+  color: var(--color-text);
+}
+
 @media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
   *, *::before, *::after {
     transition-duration: 0.01ms !important;
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
   }
 }
+
+/* ---------- Motion (public site) ---------- */
+
+/* Scroll reveal: animates the individual `translate` property so hover `transform` still composes. */
+@keyframes reveal-up {
+  from { opacity: 0; translate: 0 28px; }
+  to { opacity: 1; translate: 0 0; }
+}
+.motion-ready [data-reveal]:not(.is-visible) { opacity: 0; }
+.motion-ready [data-reveal].is-visible {
+  animation: reveal-up .8s cubic-bezier(.2, .7, .2, 1) var(--reveal-delay, 0ms) both;
+}
+
+/* Interactive cards: lift, gold top rule and a cursor-following spotlight. */
+.card-interactive {
+  --spot: rgba(201, 151, 26, .12);
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  transition: transform .35s cubic-bezier(.2, .7, .2, 1), box-shadow .35s ease, border-color .35s ease;
+}
+.card-interactive::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 3px;
+  background: linear-gradient(90deg, #C9971A, #EDC555);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform .5s cubic-bezier(.2, .7, .2, 1);
+}
+.card-interactive.card-dark { --spot: rgba(237, 197, 85, .14); }
+@media (hover: hover) {
+  .card-interactive:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 18px 40px -12px rgba(7, 46, 29, .22);
+    border-color: #A9D8BB;
+    background-image: radial-gradient(360px circle at var(--mx, 50%) var(--my, 50%), var(--spot), transparent 70%);
+  }
+  .card-interactive.card-dark:hover { border-color: rgba(237, 197, 85, .35); }
+  .card-interactive:hover::before { transform: scaleX(1); }
+  .card-interactive:hover .card-icon { transform: rotate(-6deg) scale(1.08); }
+}
+.card-icon { transition: transform .4s cubic-bezier(.2, .7, .2, 1); }
+
+/* Typewriter caret */
+@keyframes caret-blink { 0%, 45% { opacity: 1; } 50%, 95% { opacity: 0; } 100% { opacity: 1; } }
+.caret { animation: caret-blink 1s steps(1) infinite; }
+
+/* Lenis */
+html.lenis, html.lenis body { height: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+.lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
+.lenis.lenis-stopped { overflow: hidden; }
+
+/* Africa markets map */
+@keyframes route-flow { to { stroke-dashoffset: -24; } }
+@keyframes map-pulse { 0% { opacity: .55; transform: scale(.6); } 100% { opacity: 0; transform: scale(2.2); } }
+.map-route {
+  stroke-dasharray: 6 6;
+  animation: route-flow 1.2s linear infinite;
+  opacity: .9;
+}
+.map-pulse {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: map-pulse 2.4s cubic-bezier(.2, .7, .2, 1) infinite;
+}
+
+/* Scroll-to-top progress ring */
+.scroll-ring { transition: stroke-dashoffset .1s linear; }

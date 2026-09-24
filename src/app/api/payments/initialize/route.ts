@@ -1,7 +1,8 @@
+import { features, featureDisabled } from '@/lib/features'
 import { requireUser, jsonError } from '@/lib/serverAuth'
 import { rateLimit } from '@/lib/rateLimit'
 
-export async function POST(request: Request) {
+export async function POST(request: Request) {if(!features.payments)return featureDisabled();
   try {
     rateLimit(request, 'payment', 10)
     const { user, admin } = await requireUser(request)
