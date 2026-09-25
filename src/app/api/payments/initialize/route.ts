@@ -14,7 +14,7 @@ export async function POST(request: Request) {if(!features.payments)return featu
     const amount = Number(contract.data()?.amount), currency = String(contract.data()?.currency || 'NGN')
     if (!Number.isFinite(amount) || amount <= 0) return Response.json({ ok: false, error: 'Contract amount is invalid' }, { status: 409 })
     const secret = process.env.PAYSTACK_SECRET_KEY
-    if (!secret) return Response.json({ ok: false, error: 'Payment provider is not configured' }, { status: 503 })
+    if (!secret) return Response.json({ ok: false, error: 'Payments are temporarily unavailable. Please try again later.' }, { status: 503 })
     const reference = `afrigo_${crypto.randomUUID().replace(/-/g, '')}`
     const response = await fetch('https://api.paystack.co/transaction/initialize', { method: 'POST', headers: { Authorization: `Bearer ${secret}`, 'Content-Type': 'application/json' }, body: JSON.stringify({ email: user.email, amount: String(Math.round(amount * 100)), currency, reference, callback_url: `${process.env.NEXT_PUBLIC_SITE_URL}/dashboard`, metadata: JSON.stringify({ contractId: contract.id, userId: user.id }) }) })
     const result = await response.json()

@@ -11,7 +11,7 @@ export async function requireUser(request: Request) {
     admin = firebaseAdmin()
   } catch (error) {
     console.error('Firebase Admin configuration error', error instanceof Error ? error.message : error)
-    throw jsonResponse('The production data service is not configured. Contact Afrigo support.', 503)
+    throw jsonResponse('This service is temporarily unavailable. Please try again later.', 503)
   }
 
   try {

@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { motion } from 'framer-motion'
 import { requestEmailVerification, useAuth } from '@/lib/auth'
@@ -35,32 +35,12 @@ const MotionButton = motion.button as any
 export default function RoleSelectionPage() {
   const router = useRouter()
   const tracker = useActivityTracker()
-  const { user, isSignedIn, isDemo, createDemo, setRole } = useAuth()
+  const { user, isSignedIn, setRole } = useAuth()
   const [loading, setLoading] = useState<string | null>(null)
   const [error, setError] = useState('')
   const [verificationSent,setVerificationSent]=useState(false)
 
   const currentRole = user?.role || ''
-
-  useEffect(() => {
-    if (isDemo && currentRole) {
-      router.prefetch('/dashboard')
-    }
-  }, [currentRole, router, isDemo])
-
-  const startDemo = (role: string) => {
-    if (!isValidRole(role)) {
-      setError('Please select a valid preview role.')
-      return
-    }
-
-    setError('')
-    setLoading(role)
-    createDemo(role)
-    tracker.log('role_select', role, 'Demo mode')
-    setLoading(null)
-    router.push('/dashboard')
-  }
 
   const selectRole = async (role: string) => {
     if (!isValidRole(role)) {
@@ -138,34 +118,6 @@ export default function RoleSelectionPage() {
               <p className="text-sm text-[var(--afrigo-text-secondary)]">Already signed in? Refresh the page to continue.</p>
             </MotionDiv>
 
-            <MotionDiv
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.35, duration: 0.6 }}
-              className="mx-auto max-w-6xl space-y-8 rounded-3xl border border-[var(--afrigo-border)] bg-[var(--afrigo-surface)] p-8 shadow-xl"
-            >
-              <div className="text-center">
-                <p className="text-sm font-semibold uppercase tracking-widest text-[var(--afrigo-secondary-gold)]">Preview Mode</p>
-                <h2 className="mt-3 text-3xl font-black text-[var(--afrigo-primary-green)]">Try Afrigo without signing in</h2>
-                <p className="mx-auto mt-4 max-w-2xl text-[var(--afrigo-text-secondary)]">Choose a role and explore the dashboard with preview data instantly.</p>
-              </div>
-              <div className="grid gap-4 sm:grid-cols-3">
-                {roles.map((role) => (
-                  <MotionButton
-                    key={role.name}
-                    whileHover={{ scale: 1.03 }}
-                    whileTap={{ scale: 0.97 }}
-                    onClick={() => startDemo(role.name)}
-                    className="rounded-3xl border border-[var(--afrigo-border)] bg-[var(--afrigo-bg)] px-4 py-5 text-left transition hover:border-[var(--afrigo-primary-green)] hover:bg-[var(--afrigo-primary-green-hover)]/5"
-                  >
-                    <p className="text-3xl">{role.icon}</p>
-                    <p className="mt-4 text-xl font-bold text-[var(--afrigo-primary-green)]">{role.name}</p>
-                    <p className="mt-2 text-sm text-[var(--afrigo-text-secondary)]">{role.description}</p>
-                    <p className="mt-4 text-sm font-semibold text-[var(--afrigo-secondary-gold)]">Explore this role →</p>
-                  </MotionButton>
-                ))}
-              </div>
-            </MotionDiv>
           </>
         ) : (
           <div className="space-y-10">
