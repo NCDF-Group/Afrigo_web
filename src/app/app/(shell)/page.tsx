@@ -2,10 +2,11 @@
 
 import { Suspense, useEffect, useMemo, useState } from 'react'
 import Link from 'next/link'
-import { useSearchParams } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import Icon, { type IconName } from '@/components/ui/Icon'
 import Skeleton from '@/components/ui/Skeleton'
 import StatusBadge from '@/components/workspace/StatusBadge'
+import Tour, { tourSeen } from '@/components/workspace/Tour'
 import { useAuth } from '@/lib/auth'
 import { useCurrentMembership, useResource, type Invitation, type Member, type Organisation } from '@/lib/workspace'
 import { fmt } from '@/i18n/config'
@@ -67,7 +68,11 @@ function DashboardSkeleton() {
 function Dashboard() {
   const { t } = useI18n()
   const copy = t.workspace.dashboard
-  const welcome = useSearchParams().get('welcome') === '1'
+  const router = useRouter()
+  const params = useSearchParams()
+  const welcome = params.get('welcome') === '1'
+  const replay = params.get('tour') === '1'
+  const [touring, setTouring] = useState(false)
   const { user } = useAuth()
   const { membership } = useCurrentMembership()
   const id = membership?.organisationId
@@ -107,6 +112,19 @@ function Dashboard() {
     [user?.emailVerified, business?.registrationNumber, status, members.data, invitations.data, explored]
   )
 
+  const ready = Boolean(membership && user && business && members.data)
+
+  useEffect(() => {
+    if (!ready) return
+    const timer = setTimeout(() => setTouring(replay || !tourSeen()), 900)
+    return () => clearTimeout(timer)
+  }, [ready, replay])
+
+  const endTour = () => {
+    setTouring(false)
+    if (replay) router.replace('/app')
+  }
+
   if (!membership || !user || !business || !members.data) return <DashboardSkeleton />
 
   const done = checklist.filter(item => item.done).length
@@ -115,6 +133,7 @@ function Dashboard() {
 
   return (
     <div className="space-y-6">
+      {touring && <Tour onClose={endTour} />}
       <section style={delay(0)} className="animate-rise relative overflow-hidden rounded-sheet bg-[linear-gradient(135deg,#025344_0%,#012A22_70%)] p-6 text-white sm:p-8">
         <div aria-hidden="true" className="absolute -right-16 -top-24 h-64 w-64 rounded-full bg-accent-500/25 blur-3xl" />
         <div aria-hidden="true" className="absolute -bottom-28 left-1/3 h-56 w-56 rounded-full bg-brand-400/30 blur-3xl" />
@@ -124,12 +143,12 @@ function Dashboard() {
             <h1 className="mt-1 font-display text-2xl font-bold tracking-tight sm:text-[32px] sm:leading-tight">{fmt(copy.greeting[greeting], { name: user.firstName || user.displayName })}</h1>
             <p className="mt-2 max-w-xl text-[15px] leading-6 text-white/75">{welcome ? copy.welcome : fmt(copy.subtitle, { business: business.name })}</p>
           </div>
-          <div className="shrink-0 rounded-full bg-white/95 p-0.5"><StatusBadge status={business.verificationStatus} /></div>
+          <div className="shrink-0"><StatusBadge status={business.verificationStatus} inverse /></div>
         </div>
       </section>
 
       {banner && status && (
-        <section style={delay(1)} className={`animate-rise flex flex-col gap-4 rounded-card border p-5 sm:flex-row sm:items-center sm:justify-between ${BANNER_TONE[status]}`}>
+        <section data-tour="verification" style={delay(1)} className={`animate-rise flex flex-col gap-4 rounded-card border p-5 sm:flex-row sm:items-center sm:justify-between ${BANNER_TONE[status]}`}>
           <div className="flex gap-4">
             <span className="grid h-11 w-11 shrink-0 place-items-center rounded-input bg-surface text-brand-600 shadow-sm dark:text-accent-400"><Icon name="shield" /></span>
             <div>
@@ -147,7 +166,7 @@ function Dashboard() {
         </section>
       )}
 
-      <section className="grid grid-cols-2 gap-3 lg:grid-cols-4 lg:gap-4">
+      <section data-tour="stats" className="grid grid-cols-2 gap-3 lg:grid-cols-4 lg:gap-4">
         {STATS.map((stat, index) => (
           <div key={stat.key} style={delay(index + 2)} className={`animate-rise lift ${card} p-4 sm:p-5`}>
             <div className="flex items-start justify-between gap-2">
@@ -161,7 +180,7 @@ function Dashboard() {
       </section>
 
       <div className="grid gap-6 lg:grid-cols-[1.25fr_1fr]">
-        <section style={delay(6)} className={`animate-rise ${card} p-5 sm:p-6`}>
+        <section data-tour="checklist" style={delay(6)} className={`animate-rise ${card} p-5 sm:p-6`}>
           <div className="flex items-center gap-4">
             <div className="relative grid place-items-center">
               <ProgressRing value={done / checklist.length} />
@@ -187,7 +206,7 @@ function Dashboard() {
           </ul>
         </section>
 
-        <section style={delay(7)} className={`animate-rise ${card} p-5 sm:p-6`}>
+        <section data-tour="explore" style={delay(7)} className={`animate-rise ${card} p-5 sm:p-6`}>
           <h2 className="font-display text-lg font-bold text-ink-900">{copy.explore.title}</h2>
           <ul className="mt-4 space-y-3">
             {copy.explore.items.map((item, index) => (

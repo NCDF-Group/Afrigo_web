@@ -6,6 +6,7 @@ import { Field, FormAlert } from '@/components/ui/Field'
 import { BusyLabel, Spinner } from '@/components/ui/Busy'
 import Skeleton from '@/components/ui/Skeleton'
 import { button, input } from '@/components/ui/styles'
+import UserAvatar from '@/components/workspace/UserAvatar'
 import { authErrorMessage, useAuth } from '@/lib/auth'
 import { cancelInvitation, changeMemberRole, inviteColleague, removeMember, useCurrentMembership, useResource, type Invitation, type Member } from '@/lib/workspace'
 import { fmt, INTL_LOCALE } from '@/i18n/config'
@@ -113,7 +114,7 @@ export default function TeamPage() {
             return (
               <li key={member.userId} className="flex flex-col gap-3 px-5 py-4 sm:flex-row sm:items-center sm:px-6">
                 <span className="flex min-w-0 flex-1 items-center gap-3">
-                  <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-brand-50 text-sm font-bold text-brand-700 dark:text-accent-400">{`${member.firstName[0] ?? ''}${member.lastName[0] ?? ''}`.toUpperCase()}</span>
+                  <UserAvatar src={member.avatarUrl} name={`${member.firstName} ${member.lastName}`.trim()} size="md" />
                   <span className="min-w-0">
                     <span className="block truncate text-[15px] font-semibold text-ink-900">
                       {member.firstName} {member.lastName} {self && <span className="ml-1 rounded-full bg-subtle px-2 py-0.5 text-xs font-bold text-ink-500">{copy.you}</span>}

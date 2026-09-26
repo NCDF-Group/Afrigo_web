@@ -4,6 +4,7 @@ import { Suspense, useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 import { useRouter, useSearchParams } from 'next/navigation'
 import AuthShell from '@/components/auth/AuthShell'
+import { FailedBadge, LoadingDots, SuccessBadge, VerifyingBadge, WaitingBadge } from '@/components/auth/VerifyBadge'
 import Icon from '@/components/ui/Icon'
 import { FormAlert } from '@/components/ui/Field'
 import { BusyLabel } from '@/components/ui/Busy'
@@ -15,15 +16,6 @@ import { useI18n } from '@/i18n/client'
 
 const COOLDOWN = 60
 const POLL_MS = 5000
-
-function MailBadge({ done }: { done?: boolean }) {
-  return (
-    <div className="relative mx-auto grid h-24 w-24 place-items-center rounded-full bg-brand-50 text-brand-600 sm:mx-0 dark:text-accent-400">
-      <span aria-hidden="true" className="absolute inset-0 animate-ping rounded-full bg-brand-100 opacity-40 [animation-duration:2.4s]" />
-      <Icon name={done ? 'check' : 'mail'} className="relative h-10 w-10" />
-    </div>
-  )
-}
 
 function CheckInbox() {
   const router = useRouter()
@@ -95,16 +87,16 @@ function CheckInbox() {
 
   if (user.emailVerified) {
     return (
-      <div className="text-center sm:text-left" role="status">
-        <MailBadge done />
+      <div className="text-center" role="status">
+        <SuccessBadge />
         <p className="mt-6 text-[15px] font-semibold text-success">{copy.confirmed}</p>
       </div>
     )
   }
 
   return (
-    <div className="text-center sm:text-left">
-      <MailBadge />
+    <div className="text-center">
+      <WaitingBadge />
       <h1 className="mt-7 font-display text-3xl font-bold tracking-tight text-ink-900">{fmt(copy.title, { name: user.firstName || user.displayName })}</h1>
       <p className="mt-3 text-[15px] leading-6 text-ink-500">{copy.sentTo}</p>
       <p className="mt-1 break-all text-[17px] font-bold text-ink-900">{user.email}</p>
@@ -113,13 +105,13 @@ function CheckInbox() {
       <ul className="mt-6 space-y-2.5 rounded-card border border-line bg-subtle/60 p-5 text-left text-sm leading-6 text-ink-700">
         {copy.tips.map(tip => (
           <li key={tip} className="flex gap-2.5">
-            <Icon name="check" className="mt-0.5 h-4 w-4 shrink-0 text-brand-600" />
+            <Icon name="check" className="mt-0.5 h-4 w-4 shrink-0 text-brand-600 dark:text-accent-400" />
             {tip}
           </li>
         ))}
       </ul>
 
-      <p className="mt-6 flex items-center justify-center gap-2.5 text-sm font-semibold text-ink-500 sm:justify-start" role="status">
+      <p className="mt-6 flex items-center justify-center gap-2.5 text-sm font-semibold text-ink-500" role="status">
         <span className="relative flex h-2.5 w-2.5">
           <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-accent-500 opacity-60" />
           <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-accent-500" />
@@ -169,9 +161,10 @@ function ConfirmLink({ token }: { token: string }) {
 
   if (status === 'working') {
     return (
-      <div className="text-center sm:text-left" role="status">
-        <MailBadge />
-        <p className="mt-6 text-[15px] text-ink-500">{copy.verifying}</p>
+      <div className="text-center" role="status" aria-live="polite">
+        <VerifyingBadge />
+        <p className="mt-7 font-display text-xl font-bold text-ink-900">{copy.verifying.replace(/[.…]+$/, '')}<LoadingDots /></p>
+        <p className="mt-2 text-sm text-ink-500">{copy.verifyingHint}</p>
       </div>
     )
   }
@@ -179,12 +172,8 @@ function ConfirmLink({ token }: { token: string }) {
   const done = status === 'done'
   const href = isSignedIn ? (done && user ? workspaceHref(user) : '/verify-email') : '/sign-in'
   return (
-    <div className="text-center sm:text-left">
-      {done ? <MailBadge done /> : (
-        <div className="mx-auto grid h-24 w-24 place-items-center rounded-full bg-danger-soft text-danger sm:mx-0">
-          <Icon name="mail" className="h-10 w-10" />
-        </div>
-      )}
+    <div className="text-center">
+      {done ? <SuccessBadge /> : <FailedBadge />}
       <h1 className="mt-7 font-display text-3xl font-bold tracking-tight text-ink-900">{done ? copy.doneTitle : copy.failedTitle}</h1>
       <p className="mt-3 text-[15px] leading-6 text-ink-500">{done ? copy.doneBody : copy.failedBody}</p>
       <Link href={href} className={`${button.primary} mt-8 min-h-12 w-full text-[15px]`}>

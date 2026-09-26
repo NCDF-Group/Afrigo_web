@@ -234,3 +234,41 @@ html.lenis, html.lenis body { height: auto; }
 
 /* Scroll-to-top progress ring */
 .scroll-ring { transition: stroke-dashoffset .1s linear; }
+
+@keyframes pop-in {
+  0% { opacity: 0; transform: scale(.6); }
+  60% { opacity: 1; transform: scale(1.08); }
+  100% { transform: scale(1); }
+}
+
+@keyframes ring-burst {
+  from { opacity: .55; transform: scale(1); }
+  to { opacity: 0; transform: scale(1.7); }
+}
+
+@keyframes draw-check {
+  from { stroke-dashoffset: 24; }
+  to { stroke-dashoffset: 0; }
+}
+
+@keyframes envelope-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+
+@keyframes dot-bounce {
+  0%, 80%, 100% { opacity: .25; transform: translateY(0); }
+  40% { opacity: 1; transform: translateY(-4px); }
+}
+
+@keyframes spotlight-pulse {
+  0%, 100% { box-shadow: 0 0 0 3px rgb(124 176 65 / .9), 0 0 0 9999px rgb(1 15 11 / .62); }
+  50% { box-shadow: 0 0 0 6px rgb(124 176 65 / .45), 0 0 0 9999px rgb(1 15 11 / .62); }
+}
+
+.pop-in { animation: pop-in .55s cubic-bezier(.2, .8, .2, 1) both; }
+.ring-burst { animation: ring-burst 1.2s ease-out .15s both; }
+.draw-check { stroke-dasharray: 24; animation: draw-check .5s ease-out .35s both; }
+.envelope-float { animation: envelope-float 2.4s ease-in-out infinite; }
+.dot-bounce { display: inline-block; animation: dot-bounce 1.2s ease-in-out infinite; }
+.spotlight { animation: spotlight-pulse 2s ease-in-out infinite; }

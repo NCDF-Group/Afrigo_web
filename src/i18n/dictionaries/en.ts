@@ -500,6 +500,7 @@ export const en = {
       caption: 'Verified businesses trade with confidence.',
       captionDetail: 'Confirming your email keeps your account secure.',
       verifying: 'Confirming your email…',
+      verifyingHint: 'This only takes a moment.',
       doneTitle: 'Email confirmed',
       doneBody: 'Thank you. Your email address is now verified.',
       failedTitle: 'This link has expired',
@@ -759,6 +760,25 @@ export const en = {
         confirm: 'Delete account',
         deleting: 'Deleting…',
         cancel: 'Cancel'
+      }
+    },
+    tour: {
+      skip: 'Skip tour',
+      back: 'Back',
+      next: 'Next',
+      done: 'Get started',
+      progress: '{current} of {total}',
+      replayTitle: 'Workspace tour',
+      replayText: 'See the quick guide to your workspace again.',
+      replay: 'Replay tour',
+      steps: {
+        welcome: { title: 'Welcome to your workspace', text: 'Take a 30 second tour to see where everything is. You can skip it at any time.' },
+        nav: { title: 'Find your way around', text: 'Home, your business profile, your team and your account are always one tap away.' },
+        verification: { title: 'Get your business verified', text: 'Verified businesses earn a badge that trading partners trust. Start here.' },
+        stats: { title: 'Your trade at a glance', text: 'Enquiries, active trade cases, outstanding tasks and notifications show up here as you trade.' },
+        checklist: { title: 'Finish setting up', text: 'Work through these steps to get the most from AfriGoOS.' },
+        explore: { title: 'Discover opportunities', text: 'Search products and buyer requests, and read ETLS and AfCFTA guidance for your routes.' },
+        account: { title: 'Your account', text: 'Update your profile and security, and switch between light and dark mode.' }
       }
     },
     team: {

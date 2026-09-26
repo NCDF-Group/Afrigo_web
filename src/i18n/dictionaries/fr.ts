@@ -512,6 +512,7 @@ export const fr: Dictionary = {
       caption: 'Les entreprises vérifiées commercent en confiance.',
       captionDetail: 'Confirmer votre e-mail sécurise votre compte.',
       verifying: 'Confirmation de votre e-mail…',
+      verifyingHint: 'Cela ne prend qu’un instant.',
       doneTitle: 'E-mail confirmé',
       doneBody: 'Merci. Votre adresse e-mail est maintenant vérifiée.',
       failedTitle: 'Ce lien a expiré',
@@ -771,6 +772,25 @@ export const fr: Dictionary = {
         confirm: 'Supprimer le compte',
         deleting: 'Suppression…',
         cancel: 'Annuler'
+      }
+    },
+    tour: {
+      skip: 'Passer la visite',
+      back: 'Retour',
+      next: 'Suivant',
+      done: 'C’est parti',
+      progress: '{current} sur {total}',
+      replayTitle: 'Visite de l’espace de travail',
+      replayText: 'Revoyez le guide rapide de votre espace de travail.',
+      replay: 'Revoir la visite',
+      steps: {
+        welcome: { title: 'Bienvenue dans votre espace de travail', text: 'Faites une visite de 30 secondes pour découvrir où tout se trouve. Vous pouvez la passer à tout moment.' },
+        nav: { title: 'Repérez-vous', text: 'L’accueil, le profil de votre entreprise, votre équipe et votre compte sont toujours à portée de main.' },
+        verification: { title: 'Faites vérifier votre entreprise', text: 'Les entreprises vérifiées obtiennent un badge auquel les partenaires font confiance. Commencez ici.' },
+        stats: { title: 'Vos échanges en un coup d’œil', text: 'Demandes, dossiers commerciaux actifs, tâches en attente et notifications apparaissent ici au fil de vos échanges.' },
+        checklist: { title: 'Terminez la configuration', text: 'Suivez ces étapes pour tirer le meilleur parti d’AfriGoOS.' },
+        explore: { title: 'Découvrez des opportunités', text: 'Recherchez des produits et des demandes d’achat, et consultez les orientations SLE et ZLECAf pour vos routes.' },
+        account: { title: 'Votre compte', text: 'Mettez à jour votre profil et votre sécurité, et passez du mode clair au mode sombre.' }
       }
     },
     team: {

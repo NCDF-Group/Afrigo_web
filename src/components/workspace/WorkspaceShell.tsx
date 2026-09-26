@@ -12,6 +12,7 @@ import { useCurrentMembership, type Organisation } from '@/lib/workspace'
 import { useI18n } from '@/i18n/client'
 import StatusBadge from './StatusBadge'
 import ThemeSwitcher from './ThemeSwitcher'
+import UserAvatar from './UserAvatar'
 
 const NAV: { href: string; key: 'home' | 'business' | 'team' | 'account'; icon: IconName }[] = [
   { href: '/app', key: 'home', icon: 'layers' },
@@ -19,8 +20,6 @@ const NAV: { href: string; key: 'home' | 'business' | 'team' | 'account'; icon: 
   { href: '/app/team', key: 'team', icon: 'users' },
   { href: '/app/account', key: 'account', icon: 'user' }
 ]
-
-export const initials = (first?: string, last?: string) => `${first?.[0] ?? ''}${last?.[0] ?? ''}`.toUpperCase() || 'A'
 
 function ShellSkeleton() {
   return (
@@ -100,7 +99,7 @@ export default function WorkspaceShell({ children }: { children: React.ReactNode
           </div>
         </div>
         <nav aria-label={copy.menu} className="mt-4 flex-1 overflow-y-auto px-3">
-          <ul className="space-y-1">
+          <ul className="space-y-1" data-tour="nav">
             {NAV.map(item => (
               <li key={item.href}>
                 <Link
@@ -119,7 +118,7 @@ export default function WorkspaceShell({ children }: { children: React.ReactNode
         <div className="space-y-3 border-t border-line p-4">
           <ThemeSwitcher className="w-full" />
           <div className="flex items-center gap-3">
-            <Link href="/app/account" className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-brand-600 text-xs font-bold text-white dark:bg-accent-500 dark:text-brand-950">{initials(user.firstName, user.lastName)}</Link>
+            <Link href="/app/account" data-tour="account" className="shrink-0 rounded-full transition-transform hover:scale-105"><UserAvatar src={user.photoURL} name={user.displayName} /></Link>
             <span className="min-w-0 flex-1">
               <span className="block truncate text-sm font-semibold text-ink-900">{user.displayName}</span>
               <span className="block truncate text-xs text-ink-500">{user.email}</span>
@@ -136,14 +135,14 @@ export default function WorkspaceShell({ children }: { children: React.ReactNode
           <Logo href="/app" adaptive className="h-8" />
           <span className="flex min-w-0 items-center gap-2">
             <span className="hidden max-w-[40vw] truncate text-sm font-bold text-ink-900 min-[400px]:block">{membership.name}</span>
-            <Link href="/app/account" aria-label={copy.nav.account} className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-brand-600 text-[11px] font-bold text-white dark:bg-accent-500 dark:text-brand-950">{initials(user.firstName, user.lastName)}</Link>
+            <Link href="/app/account" aria-label={copy.nav.account} data-tour="account" className="shrink-0 rounded-full"><UserAvatar src={user.photoURL} name={user.displayName} /></Link>
           </span>
         </header>
         <main className="mx-auto w-full max-w-5xl px-4 pb-28 pt-6 sm:px-6 lg:px-10 lg:pb-12 lg:pt-10">{children}</main>
       </div>
 
       <nav aria-label={copy.menu} className="fixed inset-x-0 bottom-0 z-30 border-t border-line bg-surface/95 pb-[env(safe-area-inset-bottom)] backdrop-blur-lg lg:hidden">
-        <ul className="grid grid-cols-4">
+        <ul className="grid grid-cols-4" data-tour="nav">
           {NAV.map(item => (
             <li key={item.href}>
               <Link href={item.href} aria-current={active(item.href) ? 'page' : undefined} className={`relative flex min-h-[60px] flex-col items-center justify-center gap-1 text-[11px] font-semibold transition-colors ${active(item.href) ? 'text-brand-600 dark:text-accent-400' : 'text-ink-500'}`}>

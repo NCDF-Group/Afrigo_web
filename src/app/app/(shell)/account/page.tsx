@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import Icon from '@/components/ui/Icon'
 import Skeleton from '@/components/ui/Skeleton'
 import DangerZone from '@/components/workspace/account/DangerZone'
@@ -11,7 +12,9 @@ import SessionsCard from '@/components/workspace/account/SessionsCard'
 import TwoStepCard from '@/components/workspace/account/TwoStepCard'
 import StatusBadge from '@/components/workspace/StatusBadge'
 import ThemeSwitcher from '@/components/workspace/ThemeSwitcher'
-import { initials } from '@/components/workspace/WorkspaceShell'
+import { resetTour } from '@/components/workspace/Tour'
+import { button } from '@/components/ui/styles'
+import UserAvatar from '@/components/workspace/UserAvatar'
 import { useAuth } from '@/lib/auth'
 import { rememberSelected, type Organisation } from '@/lib/workspace'
 import { fmt, INTL_LOCALE } from '@/i18n/config'
@@ -30,6 +33,12 @@ export default function AccountPage() {
   const { locale, t } = useI18n()
   const copy = t.workspace.account
   const { user, organisations } = useAuth()
+  const router = useRouter()
+
+  const replayTour = () => {
+    resetTour()
+    router.push('/app?tour=1')
+  }
 
   if (!user) {
     return (
@@ -48,9 +57,7 @@ export default function AccountPage() {
       <section className="animate-rise relative overflow-hidden rounded-sheet border border-line bg-surface p-5 sm:p-7">
         <div aria-hidden="true" className="absolute inset-x-0 top-0 h-24 bg-[linear-gradient(120deg,#025344_0%,#0B7259_55%,#7CB041_120%)] opacity-90 dark:opacity-70" />
         <div className="relative flex flex-col gap-4 pt-10 sm:flex-row sm:items-end sm:gap-5 sm:pt-12">
-          <span className="grid h-20 w-20 shrink-0 place-items-center rounded-full border-4 border-surface bg-brand-600 font-display text-2xl font-bold text-white shadow-md dark:bg-accent-500 dark:text-brand-950">
-            {initials(user.firstName, user.lastName)}
-          </span>
+          <UserAvatar src={user.photoURL} name={user.displayName} size="lg" className="border-4 border-surface shadow-md" />
           <div className="min-w-0 flex-1">
             <h1 className="truncate font-display text-2xl font-bold tracking-tight text-ink-900 sm:text-3xl">{user.displayName}</h1>
             <p className="truncate text-[15px] text-ink-500">{user.email}</p>
@@ -97,7 +104,9 @@ export default function AccountPage() {
         <ThemeSwitcher withLabels className="w-full sm:w-auto" />
       </Panel>
 
-      <DangerZone user={user} delay={7} />
+      <Panel icon="target" title={t.workspace.tour.replayTitle} text={t.workspace.tour.replayText} delay={7} action={<button type="button" onClick={replayTour} className={`${button.secondary} w-full sm:w-auto`}>{t.workspace.tour.replay}</button>} />
+
+      <DangerZone user={user} delay={8} />
     </div>
   )
 }
