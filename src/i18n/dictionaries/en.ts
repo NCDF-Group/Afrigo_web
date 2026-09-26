@@ -15,7 +15,11 @@ export const en = {
       terms: { title: 'Terms of use', description: 'The terms for using the Afrigo trade and market access platform.' },
       signIn: { title: 'Sign in', description: 'Sign in to Afrigo.' },
       register: { title: 'Register your business', description: 'Create your Afrigo account.' },
-      forgotPassword: { title: 'Reset your password', description: 'Reset your Afrigo password.' }
+      forgotPassword: { title: 'Reset your password', description: 'Reset your Afrigo password.' },
+      resetPassword: { title: 'Choose a new password', description: 'Set a new Afrigo password.' },
+      verifyEmail: { title: 'Confirm your email', description: 'Confirm your Afrigo email address.' },
+      invitation: { title: 'Join your team', description: 'Accept an invitation to a business on Afrigo.' },
+      account: { title: 'Your account', description: 'Your Afrigo account.' }
     }
   },
 
@@ -431,7 +435,7 @@ export const en = {
       lastName: 'Last name',
       email: 'Work email',
       password: 'Password',
-      passwordHint: 'At least 8 characters.',
+      passwordHint: 'At least 8 characters, with a letter and a number.',
       agreeBefore: 'I agree to the',
       terms: 'Terms',
       and: 'and',
@@ -440,7 +444,7 @@ export const en = {
       submitting: 'Creating account…',
       already: 'Already registered?',
       signIn: 'Sign in',
-      passwordShort: 'Use a password of at least 8 characters.',
+      passwordShort: 'Use at least 8 characters, with a letter and a number.',
       mustAgree: 'Accept the terms and privacy policy to continue.',
       failed: 'Unable to create your account. Please try again.'
     },
@@ -460,6 +464,76 @@ export const en = {
       back: 'Back to sign in',
       different: 'Use a different email',
       notConfigured: 'Sign-in is not available right now. Please try again later.'
+    },
+    mfa: {
+      title: 'Two step verification',
+      subtitle: 'Enter the 6 digit code from your authenticator app.',
+      code: 'Verification code',
+      recoveryCode: 'Recovery code',
+      useRecovery: 'Use a recovery code instead',
+      useCode: 'Use your authenticator app instead',
+      submit: 'Verify',
+      submitting: 'Verifying…',
+      back: 'Back to sign in',
+      staffOnly: 'This is an administrator account. Sign in through AfriGoOS Admin.'
+    },
+    reset: {
+      caption: 'Your trade records stay protected.',
+      captionDetail: 'Reset links work once and expire after an hour.',
+      title: 'Choose a new password',
+      subtitle: 'Use at least 8 characters, with a letter and a number.',
+      password: 'New password',
+      confirm: 'Confirm new password',
+      mismatch: 'The passwords do not match.',
+      submit: 'Save new password',
+      submitting: 'Saving…',
+      doneTitle: 'Password updated',
+      doneBody: 'Your password has been changed and your other devices have been signed out.',
+      signIn: 'Sign in',
+      missing: 'This reset link is incomplete. Request a new one.',
+      requestNew: 'Request a new link'
+    },
+    verify: {
+      caption: 'Verified businesses trade with confidence.',
+      captionDetail: 'Confirming your email keeps your account secure.',
+      verifying: 'Confirming your email…',
+      doneTitle: 'Email confirmed',
+      doneBody: 'Thank you. Your email address is now verified.',
+      failedTitle: 'This link has expired',
+      failedBody: 'Confirmation links work once and expire after 24 hours. Sign in to send a new one.',
+      continue: 'Continue',
+      signIn: 'Sign in'
+    },
+    invite: {
+      title: 'Join your team on Afrigo',
+      caption: 'Work on trade together.',
+      captionDetail: 'Colleagues share enquiries, documents and trade cases in one workspace.',
+      accepting: 'Accepting your invitation…',
+      doneTitle: 'You have joined {name}',
+      doneBody: 'You can now work on this business’s enquiries, documents and trade cases.',
+      failedTitle: 'We could not accept this invitation',
+      signInFirst: 'Sign in or create an account with the email address the invitation was sent to.',
+      signIn: 'Sign in',
+      register: 'Create account',
+      continue: 'Continue'
+    },
+    account: {
+      caption: 'Your trade workspace starts here.',
+      captionDetail: 'Add your business, invite colleagues and start trading across Africa.',
+      greeting: 'Welcome, {name}',
+      subtitle: 'Your Afrigo account is ready.',
+      verifyTitle: 'Confirm your email',
+      verifyBody: 'We sent a confirmation link to {email}. Check your inbox and spam folder.',
+      resend: 'Send a new link',
+      resending: 'Sending…',
+      resent: 'A new confirmation link is on its way.',
+      verified: 'Email confirmed',
+      businessesTitle: 'Your businesses',
+      noBusiness: 'Your business profile comes next. Once it is added, trading partners can find you and your team can work with you.',
+      roles: { administrator: 'Administrator', member: 'Team member' },
+      signOut: 'Sign out',
+      signOutEverywhere: 'Sign out on all devices',
+      signingOut: 'Signing out…'
     }
   },
 

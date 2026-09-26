@@ -2,16 +2,14 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { sendPasswordResetEmail } from 'firebase/auth'
 import AuthShell from '@/components/auth/AuthShell'
 import { Field, FormAlert } from '@/components/ui/Field'
 import { button } from '@/components/ui/styles'
-import { authErrorMessage } from '@/lib/auth'
-import { firebaseAuth } from '@/lib/firebaseClient'
+import { authErrorMessage, requestPasswordReset } from '@/lib/auth'
 import { useI18n } from '@/i18n/client'
 
 export default function ForgotPasswordPage() {
-  const { locale, t } = useI18n()
+  const { t } = useI18n()
   const copy = t.auth.forgot
   const [email, setEmail] = useState('')
   const [sent, setSent] = useState(false)
@@ -23,14 +21,10 @@ export default function ForgotPasswordPage() {
     setBusy(true)
     setError('')
     try {
-      if (!firebaseAuth) throw Object.assign(new Error('not-configured'), { code: 'app/not-configured' })
-      firebaseAuth.languageCode = locale // reset email arrives in the page language
-      await sendPasswordResetEmail(firebaseAuth, email.trim().toLowerCase())
+      await requestPasswordReset(email)
       setSent(true)
-    } catch (cause: any) {
-      // Don't reveal whether an account exists for this email.
-      if (cause?.code === 'auth/user-not-found') setSent(true)
-      else setError(cause?.code === 'app/not-configured' ? copy.notConfigured : authErrorMessage(cause, t.errors.auth, t.errors.generic))
+    } catch (cause) {
+      setError(authErrorMessage(cause, t.errors.auth, t.errors.generic))
     } finally {
       setBusy(false)
     }

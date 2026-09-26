@@ -17,7 +17,11 @@ export const fr: Dictionary = {
       terms: { title: 'Conditions d’utilisation', description: 'Les conditions d’utilisation de la plateforme de commerce et d’accès aux marchés Afrigo.' },
       signIn: { title: 'Connexion', description: 'Connectez-vous à Afrigo.' },
       register: { title: 'Inscrire votre entreprise', description: 'Créez votre compte Afrigo.' },
-      forgotPassword: { title: 'Réinitialiser votre mot de passe', description: 'Réinitialisez votre mot de passe Afrigo.' }
+      forgotPassword: { title: 'Réinitialiser votre mot de passe', description: 'Réinitialisez votre mot de passe Afrigo.' },
+      resetPassword: { title: 'Choisissez un nouveau mot de passe', description: 'Définissez un nouveau mot de passe Afrigo.' },
+      verifyEmail: { title: 'Confirmez votre e-mail', description: 'Confirmez votre adresse e-mail Afrigo.' },
+      invitation: { title: 'Rejoignez votre équipe', description: 'Acceptez une invitation à rejoindre une entreprise sur Afrigo.' },
+      account: { title: 'Votre compte', description: 'Votre compte Afrigo.' }
     }
   },
 
@@ -443,7 +447,7 @@ export const fr: Dictionary = {
       lastName: 'Nom',
       email: 'Adresse e-mail professionnelle',
       password: 'Mot de passe',
-      passwordHint: 'Au moins 8 caractères.',
+      passwordHint: 'Au moins 8 caractères, dont une lettre et un chiffre.',
       agreeBefore: 'J’accepte les',
       terms: 'Conditions',
       and: 'et la',
@@ -452,7 +456,7 @@ export const fr: Dictionary = {
       submitting: 'Création du compte…',
       already: 'Déjà inscrit ?',
       signIn: 'Se connecter',
-      passwordShort: 'Utilisez un mot de passe d’au moins 8 caractères.',
+      passwordShort: 'Utilisez au moins 8 caractères, dont une lettre et un chiffre.',
       mustAgree: 'Acceptez les conditions et la politique de confidentialité pour continuer.',
       failed: 'Impossible de créer votre compte. Veuillez réessayer.'
     },
@@ -472,12 +476,92 @@ export const fr: Dictionary = {
       back: 'Retour à la connexion',
       different: 'Utiliser une autre adresse e-mail',
       notConfigured: 'La connexion n’est pas disponible pour le moment. Veuillez réessayer plus tard.'
+    },
+    mfa: {
+      title: 'Vérification en deux étapes',
+      subtitle: 'Saisissez le code à 6 chiffres de votre application d’authentification.',
+      code: 'Code de vérification',
+      recoveryCode: 'Code de secours',
+      useRecovery: 'Utiliser plutôt un code de secours',
+      useCode: 'Utiliser plutôt votre application d’authentification',
+      submit: 'Vérifier',
+      submitting: 'Vérification…',
+      back: 'Retour à la connexion',
+      staffOnly: 'Ce compte est un compte administrateur. Connectez-vous via AfriGoOS Admin.'
+    },
+    reset: {
+      caption: 'Vos dossiers commerciaux restent protégés.',
+      captionDetail: 'Les liens de réinitialisation ne servent qu’une fois et expirent au bout d’une heure.',
+      title: 'Choisissez un nouveau mot de passe',
+      subtitle: 'Utilisez au moins 8 caractères, dont une lettre et un chiffre.',
+      password: 'Nouveau mot de passe',
+      confirm: 'Confirmez le nouveau mot de passe',
+      mismatch: 'Les mots de passe ne correspondent pas.',
+      submit: 'Enregistrer le mot de passe',
+      submitting: 'Enregistrement…',
+      doneTitle: 'Mot de passe mis à jour',
+      doneBody: 'Votre mot de passe a été modifié et vos autres appareils ont été déconnectés.',
+      signIn: 'Se connecter',
+      missing: 'Ce lien de réinitialisation est incomplet. Demandez-en un nouveau.',
+      requestNew: 'Demander un nouveau lien'
+    },
+    verify: {
+      caption: 'Les entreprises vérifiées commercent en confiance.',
+      captionDetail: 'Confirmer votre e-mail sécurise votre compte.',
+      verifying: 'Confirmation de votre e-mail…',
+      doneTitle: 'E-mail confirmé',
+      doneBody: 'Merci. Votre adresse e-mail est maintenant vérifiée.',
+      failedTitle: 'Ce lien a expiré',
+      failedBody: 'Les liens de confirmation ne servent qu’une fois et expirent au bout de 24 heures. Connectez-vous pour en recevoir un nouveau.',
+      continue: 'Continuer',
+      signIn: 'Se connecter'
+    },
+    invite: {
+      title: 'Rejoignez votre équipe sur Afrigo',
+      caption: 'Travaillez ensemble sur vos échanges.',
+      captionDetail: 'Vos collègues partagent demandes, documents et dossiers commerciaux dans un seul espace.',
+      accepting: 'Acceptation de votre invitation…',
+      doneTitle: 'Vous avez rejoint {name}',
+      doneBody: 'Vous pouvez désormais travailler sur les demandes, documents et dossiers commerciaux de cette entreprise.',
+      failedTitle: 'Impossible d’accepter cette invitation',
+      signInFirst: 'Connectez-vous ou créez un compte avec l’adresse e-mail à laquelle l’invitation a été envoyée.',
+      signIn: 'Se connecter',
+      register: 'Créer un compte',
+      continue: 'Continuer'
+    },
+    account: {
+      caption: 'Votre espace commercial commence ici.',
+      captionDetail: 'Ajoutez votre entreprise, invitez vos collègues et commercez à travers l’Afrique.',
+      greeting: 'Bienvenue, {name}',
+      subtitle: 'Votre compte Afrigo est prêt.',
+      verifyTitle: 'Confirmez votre e-mail',
+      verifyBody: 'Nous avons envoyé un lien de confirmation à {email}. Vérifiez votre boîte de réception et vos courriers indésirables.',
+      resend: 'Envoyer un nouveau lien',
+      resending: 'Envoi…',
+      resent: 'Un nouveau lien de confirmation est en route.',
+      verified: 'E-mail confirmé',
+      businessesTitle: 'Vos entreprises',
+      noBusiness: 'La prochaine étape est le profil de votre entreprise. Une fois ajouté, vos partenaires commerciaux pourront vous trouver et votre équipe pourra travailler avec vous.',
+      roles: { administrator: 'Administrateur', member: 'Membre de l’équipe' },
+      signOut: 'Se déconnecter',
+      signOutEverywhere: 'Se déconnecter de tous les appareils',
+      signingOut: 'Déconnexion…'
     }
   },
 
   errors: {
     generic: 'Une erreur s’est produite. Veuillez réessayer.',
     auth: {
+      INVALID_CREDENTIALS: 'Cette adresse e-mail et ce mot de passe ne correspondent pas.',
+      EMAIL_TAKEN: 'Un compte existe déjà pour cette adresse e-mail. Connectez-vous.',
+      ACCOUNT_LOCKED: 'Trop de tentatives échouées. Réessayez dans quelques minutes ou réinitialisez votre mot de passe.',
+      ACCOUNT_SUSPENDED: 'Ce compte a été suspendu. Contactez l’assistance.',
+      TOO_MANY_REQUESTS: 'Trop de tentatives. Patientez quelques minutes puis réessayez.',
+      INVALID_TOKEN: 'Ce lien n’est pas valide ou a expiré. Demandez-en un nouveau.',
+      INVALID_MFA_CODE: 'Ce code n’est pas valide. Vérifiez votre application et réessayez.',
+      INVALID_MFA_TOKEN: 'Votre connexion a expiré. Recommencez.',
+      INVITATION_EMAIL_MISMATCH: 'Cette invitation a été envoyée à une autre adresse e-mail. Connectez-vous avec celle-ci.',
+      NETWORK: 'Problème de réseau. Vérifiez votre connexion et réessayez.',
       'auth/invalid-credential': 'Cette adresse e-mail et ce mot de passe ne correspondent pas.',
       'auth/wrong-password': 'Cette adresse e-mail et ce mot de passe ne correspondent pas.',
       'auth/user-not-found': 'Cette adresse e-mail et ce mot de passe ne correspondent pas.',

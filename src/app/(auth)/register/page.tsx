@@ -1,21 +1,24 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { Suspense, useState } from 'react'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import AuthShell from '@/components/auth/AuthShell'
-import GoogleButton from '@/components/auth/GoogleButton'
+import GoogleSignIn, { googleEnabled } from '@/components/auth/GoogleSignIn'
 import { Field, FormAlert, OrDivider, PasswordField } from '@/components/ui/Field'
 import { button } from '@/components/ui/styles'
-import { authErrorMessage, completeRedirectSignIn, signInWithGoogle, signUp } from '@/lib/auth'
-import { workspaceHref } from '@/lib/authRoutes'
+import { authErrorMessage, signInWithGoogle, signUp } from '@/lib/auth'
+import { safeNext, workspaceHref } from '@/lib/authRoutes'
 import { useActivityTracker } from '@/lib/activityTracker'
 import { useI18n } from '@/i18n/client'
 
-export default function RegisterPage() {
+const strongEnough = (value: string) => value.length >= 8 && /[A-Za-z]/.test(value) && /\d/.test(value)
+
+function RegisterForm() {
   const router = useRouter()
+  const params = useSearchParams()
   const tracker = useActivityTracker()
-  const { t } = useI18n()
+  const { locale, t } = useI18n()
   const copy = t.auth.register
   const [firstName, setFirstName] = useState('')
   const [lastName, setLastName] = useState('')
@@ -24,38 +27,35 @@ export default function RegisterPage() {
   const [agreed, setAgreed] = useState(false)
   const [busy, setBusy] = useState<'' | 'email' | 'google'>('')
   const [error, setError] = useState('')
-
-  useEffect(() => {
-    completeRedirectSignIn()
-      .then(result => result && router.replace(workspaceHref(result)))
-      .catch(cause => setError(authErrorMessage(cause, t.errors.auth, t.errors.generic)))
-  }, [router])
+  const next = safeNext(params.get('next'))
 
   const submit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     setError('')
-    if (password.length < 8) return setError(copy.passwordShort)
+    if (!strongEnough(password)) return setError(copy.passwordShort)
     if (!agreed) return setError(copy.mustAgree)
     setBusy('email')
     try {
-      const result = await signUp({ firstName, lastName, email, password })
-      tracker.log('auth_signup', `${firstName} ${lastName}`, email)
-      router.replace(workspaceHref(result.user))
+      const result = await signUp({ firstName, lastName, email, password, locale })
+      tracker.log('auth_signup', 'Created account')
+      router.replace(next || workspaceHref(result.user))
     } catch (cause) {
       setError(authErrorMessage(cause, t.errors.auth, copy.failed))
-      tracker.log('auth_signup', 'failed', (cause as any)?.code || 'Unknown error')
       setBusy('')
     }
   }
 
-  const google = async () => {
+  const google = async (idToken: string) => {
     setBusy('google')
     setError('')
     try {
-      const signedIn = await signInWithGoogle()
-      if (!signedIn) return
+      const result = await signInWithGoogle(idToken)
+      if (!('user' in result)) {
+        router.replace('/sign-in')
+        return
+      }
       tracker.log('auth_signup', 'google sign up')
-      router.replace(workspaceHref(signedIn))
+      router.replace(next || workspaceHref(result.user))
     } catch (cause) {
       setError(authErrorMessage(cause, t.errors.auth, t.errors.generic))
       setBusy('')
@@ -63,16 +63,20 @@ export default function RegisterPage() {
   }
 
   return (
-    <AuthShell image="/images/auth-register.webp" caption={copy.caption} captionDetail={copy.captionDetail}>
+    <>
       <h1 className="font-display text-3xl font-bold tracking-tight text-ink-900">{copy.title}</h1>
       <p className="mt-2 text-[15px] leading-6 text-ink-500">{copy.subtitle}</p>
 
-      <div className="mt-8">
-        <GoogleButton onClick={google} busy={busy === 'google'} label={t.auth.google.signUp} />
-      </div>
-      <OrDivider />
+      {googleEnabled && (
+        <>
+          <div className="mt-8">
+            <GoogleSignIn mode="signup" onCredential={idToken => void google(idToken)} />
+          </div>
+          <OrDivider />
+        </>
+      )}
 
-      <form onSubmit={submit} className="space-y-5">
+      <form onSubmit={submit} className={`space-y-5 ${googleEnabled ? '' : 'mt-8'}`}>
         <div className="grid gap-5 sm:grid-cols-2">
           <Field label={copy.firstName} name="given-name" autoComplete="given-name" required value={firstName} onChange={event => setFirstName(event.target.value)} />
           <Field label={copy.lastName} name="family-name" autoComplete="family-name" required value={lastName} onChange={event => setLastName(event.target.value)} />
@@ -101,8 +105,19 @@ export default function RegisterPage() {
       </form>
 
       <p className="mt-8 text-center text-[15px] text-ink-500">
-        {copy.already} <Link href="/sign-in" className={button.link}>{copy.signIn}</Link>
+        {copy.already} <Link href={next ? `/sign-in?next=${encodeURIComponent(next)}` : '/sign-in'} className={button.link}>{copy.signIn}</Link>
       </p>
+    </>
+  )
+}
+
+export default function RegisterPage() {
+  const copy = useI18n().t.auth.register
+  return (
+    <AuthShell image="/images/auth-register.webp" caption={copy.caption} captionDetail={copy.captionDetail}>
+      <Suspense>
+        <RegisterForm />
+      </Suspense>
     </AuthShell>
   )
 }

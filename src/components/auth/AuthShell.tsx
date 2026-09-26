@@ -18,7 +18,7 @@ export default function AuthShell({ image, caption, captionDetail, children }: P
   return (
     <div className="flex min-h-[100svh] bg-white lg:flex-row-reverse">
       <div className="flex w-full flex-col px-4 py-6 sm:px-8 lg:w-1/2 lg:px-12 xl:px-20">
-        <div className="flex items-center">
+        <div className="flex items-center justify-center">
           <Logo />
         </div>
         <div className="flex flex-1 items-start justify-center pb-10 pt-12 sm:pt-16 lg:items-center lg:py-10">
