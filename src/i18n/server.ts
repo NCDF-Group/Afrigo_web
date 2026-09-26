@@ -17,5 +17,5 @@ export async function getDictionary() {
 }
 
 // Only the namespaces client components need are sent to the browser.
-export const clientDictionary = (t: Dictionary) => ({ common: t.common, nav: t.nav, map: t.map, countries: t.countries, contactForm: t.contactForm, auth: t.auth, errors: t.errors })
+export const clientDictionary = (t: Dictionary) => ({ common: t.common, nav: t.nav, map: t.map, countries: t.countries, contactForm: t.contactForm, auth: t.auth, workspace: t.workspace, errors: t.errors })
 export type ClientDictionary = ReturnType<typeof clientDictionary>

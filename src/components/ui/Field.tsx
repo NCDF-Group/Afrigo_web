@@ -1,5 +1,6 @@
 'use client'
 import { useId, useState } from 'react'
+import Icon from './Icon'
 import { input } from './styles'
 import { useI18n } from '@/i18n/client'
 
@@ -39,15 +40,17 @@ export function PasswordField(props: Omit<FieldProps, 'type'>) {
         {action}
       </div>
       <div className="relative">
-        <input id={fieldId} type={visible ? 'text' : 'password'} aria-invalid={error ? true : undefined} aria-describedby={describedBy} className={`${input} pr-20`} {...rest} />
+        <input id={fieldId} type={visible ? 'text' : 'password'} aria-invalid={error ? true : undefined} aria-describedby={describedBy} className={`${input} pr-14`} {...rest} />
         <button
           type="button"
           onClick={() => setVisible(value => !value)}
           aria-controls={fieldId}
           aria-pressed={visible}
-          className="absolute inset-y-1 right-1 rounded-[9px] px-3 text-sm font-semibold text-ink-500 hover:bg-subtle hover:text-ink-900"
+          aria-label={visible ? t.auth.hide : t.auth.show}
+          title={visible ? t.auth.hide : t.auth.show}
+          className="absolute inset-y-1 right-1 grid w-11 place-items-center rounded-[9px] text-ink-500 transition-colors hover:bg-subtle hover:text-ink-900"
         >
-          {visible ? t.auth.hide : t.auth.show}
+          <Icon name={visible ? 'eyeOff' : 'eye'} className="h-5 w-5" />
         </button>
       </div>
       {error ? (

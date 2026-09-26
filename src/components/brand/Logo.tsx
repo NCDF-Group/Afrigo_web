@@ -14,14 +14,16 @@ type Props = {
   tone?: 'dark' | 'light'
   href?: string
   className?: string
+  adaptive?: boolean
 }
 
-export default function Logo({ variant = 'lockup', tone = 'dark', href = '/', className = 'h-9' }: Props) {
+export default function Logo({ variant = 'lockup', tone = 'dark', href = '/', className = 'h-9', adaptive = false }: Props) {
   const art = ART[variant]
   const file = variant === 'mark' || tone === 'dark' ? art.src : `${art.src}-light`
   return (
     <Link href={href} className="inline-flex shrink-0 items-center rounded-input" aria-label={`${BRAND.name} home`}>
-      <img src={`/brand/${file}.svg`} alt={BRAND.name} width={art.width} height={art.height} className={`w-auto ${className}`} />
+      <img src={`/brand/${file}.svg`} alt={BRAND.name} width={art.width} height={art.height} className={`w-auto ${className} ${adaptive ? 'dark:hidden' : ''}`} />
+      {adaptive && variant !== 'mark' && <img src={`/brand/${art.src}-light.svg`} alt="" aria-hidden="true" width={art.width} height={art.height} className={`hidden w-auto dark:block ${className}`} />}
     </Link>
   )
 }

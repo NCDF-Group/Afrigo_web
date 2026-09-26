@@ -1,9 +1,11 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
+import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import AuthShell from '@/components/auth/AuthShell'
 import { FormAlert } from '@/components/ui/Field'
+import { BusyLabel } from '@/components/ui/Busy'
 import { button } from '@/components/ui/styles'
 import { authErrorMessage, myOrganisations, requestEmailVerification, signOut, signOutEverywhere, useAuth, type Membership } from '@/lib/auth'
 import { fmt } from '@/i18n/config'
@@ -21,8 +23,10 @@ export default function AccountPage() {
   const leaving = useRef(false)
 
   useEffect(() => {
-    if (!loading && !isSignedIn && !leaving.current) router.replace('/sign-in?next=/account')
-  }, [loading, isSignedIn, router])
+    if (loading || leaving.current) return
+    if (!isSignedIn) router.replace('/sign-in?next=/account')
+    else if (user?.emailVerified && user.organisations.length) router.replace('/app/account')
+  }, [loading, isSignedIn, user, router])
 
   useEffect(() => {
     if (!isSignedIn) return
@@ -73,7 +77,7 @@ export default function AccountPage() {
                 <h2 className="font-display text-lg font-bold text-ink-900">{copy.verifyTitle}</h2>
                 <p className="mt-1.5 text-[15px] leading-6 text-ink-500">{fmt(copy.verifyBody, { email: user.email })}</p>
                 <button type="button" disabled={!!busy} onClick={() => void run('resend', requestEmailVerification, () => setNotice(copy.resent))} className={`${button.secondary} mt-4 min-h-11 w-full text-[15px]`}>
-                  {busy === 'resend' ? copy.resending : copy.resend}
+                  <BusyLabel busy={busy === 'resend'} label={copy.resend} busyLabel={copy.resending} />
                 </button>
               </>
             )}
@@ -103,11 +107,16 @@ export default function AccountPage() {
           </div>
 
           <div className="mt-6 grid gap-3">
-            <button type="button" disabled={!!busy} onClick={() => void run('signout', signOut, leave)} className={`${button.primary} min-h-12 text-[15px]`}>
-              {busy === 'signout' ? copy.signingOut : copy.signOut}
+            {user.emailVerified && organisations !== null && (
+              <Link href={organisations.length ? '/app' : '/app/setup'} className={`${button.primary} min-h-12 text-[15px]`}>
+                {organisations.length ? copy.openWorkspace : copy.setupBusiness}
+              </Link>
+            )}
+            <button type="button" disabled={!!busy} onClick={() => void run('signout', signOut, leave)} className={`${button.secondary} min-h-12 text-[15px]`}>
+              <BusyLabel busy={busy === 'signout'} label={copy.signOut} busyLabel={copy.signingOut} />
             </button>
-            <button type="button" disabled={!!busy} onClick={() => void run('everywhere', signOutEverywhere, leave)} className="min-h-11 text-sm font-semibold text-ink-500 hover:text-ink-900">
-              {busy === 'everywhere' ? copy.signingOut : copy.signOutEverywhere}
+            <button type="button" disabled={!!busy} onClick={() => void run('everywhere', signOutEverywhere, leave)} className="inline-flex min-h-11 items-center justify-center gap-2 text-sm font-semibold text-ink-500 hover:text-ink-900">
+              <BusyLabel busy={busy === 'everywhere'} label={copy.signOutEverywhere} busyLabel={copy.signingOut} />
             </button>
           </div>
         </>

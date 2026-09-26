@@ -19,7 +19,9 @@ export const en = {
       resetPassword: { title: 'Choose a new password', description: 'Set a new Afrigo password.' },
       verifyEmail: { title: 'Confirm your email', description: 'Confirm your Afrigo email address.' },
       invitation: { title: 'Join your team', description: 'Accept an invitation to a business on Afrigo.' },
-      account: { title: 'Your account', description: 'Your Afrigo account.' }
+      account: { title: 'Your account', description: 'Your Afrigo account.' },
+      setup: { title: 'Set up your business', description: 'Create your AfriGoOS business profile.' },
+      workspace: { title: 'Workspace', description: 'Your AfriGoOS business workspace.' }
     }
   },
 
@@ -419,6 +421,7 @@ export const en = {
       subtitle: 'Sign in to manage your enquiries, trade cases and business profile.',
       email: 'Work email',
       password: 'Password',
+      remember: 'Remember me',
       forgot: 'Forgot password?',
       submit: 'Sign in',
       submitting: 'Signing in…',
@@ -531,9 +534,256 @@ export const en = {
       businessesTitle: 'Your businesses',
       noBusiness: 'Your business profile comes next. Once it is added, trading partners can find you and your team can work with you.',
       roles: { administrator: 'Administrator', member: 'Team member' },
+      setupBusiness: 'Set up your business',
+      openWorkspace: 'Open your workspace',
       signOut: 'Sign out',
       signOutEverywhere: 'Sign out on all devices',
       signingOut: 'Signing out…'
+    }
+  },
+
+  workspace: {
+    checkInbox: {
+      caption: 'One quick step before you start trading.',
+      captionDetail: 'Confirming your email keeps your business account secure.',
+      title: 'Check your inbox, {name}',
+      sentTo: 'We sent a confirmation link to',
+      next: 'Open the link to confirm your email, then set up your business.',
+      tips: ['The email comes from AfriGoOS.', 'It can take a minute or two to arrive.', 'Not there? Check your spam or promotions folder.'],
+      waiting: 'Waiting for your confirmation',
+      confirmed: 'Email confirmed. Taking you to your business setup.',
+      resend: 'Resend email',
+      resendIn: 'Resend in {seconds}s',
+      resent: 'A new link is on its way. Check your inbox.',
+      wrongEmail: 'Wrong email address?',
+      startOver: 'Sign out and register again'
+    },
+    kinds: {
+      business: { title: 'Trading business', text: 'Export, import, manufacture, aggregate or trade goods.' },
+      service_partner: { title: 'Service partner', text: 'Provide logistics, inspection or trade readiness services to businesses.' }
+    },
+    types: {
+      exporter: { title: 'Exporter', text: 'Sells goods to other countries' },
+      importer: { title: 'Importer', text: 'Buys goods from other countries' },
+      manufacturer: { title: 'Manufacturer', text: 'Makes or processes goods' },
+      cooperative: { title: 'Cooperative', text: 'A member owned group of producers' },
+      aggregator: { title: 'Aggregator', text: 'Collects produce from many suppliers' },
+      trade_service_provider: { title: 'Trade service provider', text: 'Logistics, inspection, finance or advisory' }
+    },
+    fields: {
+      name: 'Registered business name',
+      tradingName: 'Trading name (optional)',
+      country: 'Country of registration',
+      countryPlaceholder: 'Choose a country',
+      countryNote: 'AfriGoOS is opening country by country, starting in West Africa.',
+      city: 'City',
+      registrationNumber: 'Business registration number',
+      registrationHint: 'For example your CAC, RGD or company registry number. Needed for verification.',
+      taxId: 'Tax ID (optional)',
+      address: 'Business address',
+      phone: 'Business phone',
+      email: 'Business email',
+      website: 'Website (optional)',
+      description: 'About the business',
+      descriptionHint: 'What you trade, where you operate and what makes you a reliable partner.'
+    },
+    verification: {
+      unverified: 'Not verified',
+      pending: 'In review',
+      verified: 'Verified',
+      rejected: 'Changes needed'
+    },
+    roles: { administrator: 'Administrator', member: 'Team member' },
+    setup: {
+      caption: 'Put your business in front of new African markets.',
+      captionDetail: 'Your profile is what buyers, sellers and service partners see first.',
+      step: 'Step {current} of {total}',
+      steps: ['Business type', 'Details', 'Review'],
+      kindTitle: 'What kind of business are you?',
+      kindSubtitle: 'One account can both buy and sell.',
+      typesTitle: 'What does your business do?',
+      typesHint: 'Choose all that apply.',
+      detailsTitle: 'Tell us about your business',
+      detailsSubtitle: 'Trading partners see these details on your profile.',
+      reviewTitle: 'Review and create',
+      reviewSubtitle: 'You can change these details later from your business profile.',
+      notProvided: 'Not provided',
+      back: 'Back',
+      next: 'Continue',
+      create: 'Create business profile',
+      creating: 'Creating your profile…',
+      chooseKind: 'Choose whether you are a trading business or a service partner.',
+      chooseType: 'Choose at least one business type.',
+      nameRequired: 'Enter your registered business name.',
+      countryRequired: 'Choose the country where your business is registered.'
+    },
+    shell: {
+      nav: { home: 'Home', business: 'Business profile', team: 'Team', account: 'Account' },
+      theme: { label: 'Appearance', light: 'Light', dark: 'Dark', system: 'System' },
+      menu: 'Workspace menu',
+      signOut: 'Sign out'
+    },
+    dashboard: {
+      greeting: { morning: 'Good morning, {name}', afternoon: 'Good afternoon, {name}', evening: 'Good evening, {name}' },
+      subtitle: 'Here is what is happening at {business}.',
+      welcome: 'Your business profile is ready. Here is how to get the most out of AfriGoOS.',
+      stats: {
+        enquiries: { label: 'Enquiries', empty: 'No enquiries yet' },
+        cases: { label: 'Active trade cases', empty: 'No open trade cases' },
+        tasks: { label: 'Outstanding tasks', empty: 'Nothing waiting on you' },
+        notifications: { label: 'Notifications', empty: 'You are all caught up' }
+      },
+      banners: {
+        unverified: { title: 'Get your business verified', text: 'Verified businesses show a badge that trading partners trust. Add your registration number, then submit for review.', action: 'Open business profile' },
+        pending: { title: 'Verification in review', text: 'The AfriGoOS team is reviewing your business. Your administrators will get an email when it is done.' },
+        rejected: { title: 'Your business needs a few changes', text: 'Update your details and submit again.', action: 'Review details' },
+        verified: { title: 'Your business is verified', text: 'Trading partners can see your verified badge.' }
+      },
+      checklist: {
+        title: 'Get started',
+        progress: '{done} of {total} done',
+        items: { email: 'Confirm your email', profile: 'Create your business profile', registration: 'Add your registration number', verification: 'Submit your business for verification', team: 'Invite a colleague', explore: 'Explore trade opportunities' }
+      },
+      explore: {
+        title: 'Explore AfriGoOS',
+        items: [
+          { href: '/opportunities', title: 'Trade opportunities', text: 'Search products, buyer requests and supply opportunities.' },
+          { href: '/market-access', title: 'Market access', text: 'ETLS and AfCFTA guidance for your trade routes.' },
+          { href: '/services', title: 'Services', text: 'Logistics, inspection and trade readiness support.' }
+        ]
+      }
+    },
+    business: {
+      title: 'Business profile',
+      subtitle: 'The details trading partners see about {business}.',
+      edit: 'Edit details',
+      save: 'Save changes',
+      saving: 'Saving…',
+      saved: 'Business details saved.',
+      cancel: 'Cancel',
+      adminOnly: 'Only business administrators can change these details.',
+      identityWarning: 'Changing the business name, registration number, tax ID or country removes the verified badge until the business is reviewed again.',
+      verificationTitle: 'Verification',
+      submit: 'Submit for verification',
+      submitting: 'Submitting…',
+      submitted: 'Submitted. Your administrators will get an email when the review is done.',
+      needsRegistration: 'Add your registration number to submit for verification.',
+      reviewNote: 'Note from the AfriGoOS team',
+      kind: 'Business type',
+      activities: 'Activities'
+    },
+    account: {
+      title: 'Your account',
+      subtitle: 'Your personal details, security and preferences.',
+      memberSince: 'Member since {date}',
+      emailVerified: 'Email verified',
+      emailNotVerified: 'Email not verified',
+      mfaOn: 'Two step verification on',
+      mfaOff: 'Two step verification off',
+      personal: {
+        title: 'Personal details',
+        firstName: 'First name',
+        lastName: 'Last name',
+        email: 'Email',
+        emailHint: 'Contact AfriGoOS support to change the email you sign in with.',
+        phone: 'Phone number',
+        country: 'Country',
+        notSet: 'Not set',
+        language: 'Language',
+        languages: { en: 'English', fr: 'Français' },
+        edit: 'Edit',
+        save: 'Save changes',
+        saving: 'Saving…',
+        cancel: 'Cancel',
+        saved: 'Your details were saved.'
+      },
+      businesses: { title: 'Your businesses', open: 'Open', add: 'Add another business' },
+      password: {
+        title: 'Password',
+        text: 'Use a strong password you do not use anywhere else.',
+        googleText: 'You sign in with Google. Add a password to also sign in with your email.',
+        change: 'Change password',
+        add: 'Add a password',
+        current: 'Current password',
+        next: 'New password',
+        confirm: 'Confirm new password',
+        hint: 'At least 8 characters, with a letter and a number.',
+        mismatch: 'The new passwords do not match.',
+        submit: 'Update password',
+        submitting: 'Updating…',
+        cancel: 'Cancel',
+        done: 'Password updated. Your other devices were signed out.'
+      },
+      mfa: {
+        title: 'Two step verification',
+        onText: 'When you sign in, we ask for a code from your authenticator app.',
+        offText: 'Add a second step to sign in with a code from an authenticator app such as Google Authenticator or Microsoft Authenticator.',
+        enable: 'Turn on',
+        starting: 'Preparing…',
+        step1: 'Add AfriGoOS to your authenticator app with this setup key, or open the link on your phone.',
+        key: 'Setup key',
+        openApp: 'Open in authenticator app',
+        copy: 'Copy key',
+        copied: 'Copied',
+        step2: 'Enter the 6 digit code the app shows.',
+        code: 'Verification code',
+        confirm: 'Turn on two step verification',
+        confirming: 'Turning on…',
+        recoveryTitle: 'Save your recovery codes',
+        recoveryText: 'Each code works once if you lose your phone. Keep them somewhere safe. They will not be shown again.',
+        saved: 'I have saved them',
+        disable: 'Turn off',
+        disableText: 'Enter a code from your authenticator app to turn off two step verification.',
+        disabling: 'Turning off…',
+        disabled: 'Two step verification is off.',
+        cancel: 'Cancel'
+      },
+      sessions: {
+        title: 'Signed in devices',
+        subtitle: 'Sign out of any device you do not recognise.',
+        current: 'This device',
+        signedIn: 'Signed in {date}',
+        signOut: 'Sign out',
+        signOutAll: 'Sign out of all devices',
+        signingOut: 'Signing out…',
+        platforms: { web: 'Web browser', ios: 'iPhone app', android: 'Android app', admin: 'Admin console', unknown: 'Device' }
+      },
+      appearance: { title: 'Appearance', text: 'Choose how your workspace looks on this device.' },
+      danger: {
+        title: 'Delete account',
+        text: 'Permanently delete your account and personal details. Businesses you administer need another administrator first.',
+        button: 'Delete my account',
+        confirmText: 'This cannot be undone. Type DELETE and enter your password to confirm.',
+        typeDelete: 'Type DELETE to confirm',
+        password: 'Password',
+        confirm: 'Delete account',
+        deleting: 'Deleting…',
+        cancel: 'Cancel'
+      }
+    },
+    team: {
+      title: 'Team',
+      subtitle: 'People who can work on {business} enquiries, documents and trade cases.',
+      inviteTitle: 'Invite a colleague',
+      inviteEmail: 'Work email',
+      inviteRole: 'Role',
+      invite: 'Send invitation',
+      inviting: 'Sending…',
+      invited: 'Invitation sent to {email}.',
+      roleText: { administrator: 'Manages the profile, colleagues and verification', member: 'Works on enquiries, documents and trade cases' },
+      members: 'Members',
+      you: 'You',
+      pendingTitle: 'Pending invitations',
+      noPending: 'No pending invitations.',
+      expires: 'Expires {date}',
+      cancelInvite: 'Cancel',
+      remove: 'Remove',
+      leave: 'Leave',
+      makeAdmin: 'Make administrator',
+      makeMember: 'Make team member',
+      confirmRemove: 'Remove {name} from {business}?',
+      confirmLeave: 'Leave {business}? You will lose access to its records.',
+      adminOnly: 'Only business administrators can invite or manage colleagues.'
     }
   },
 

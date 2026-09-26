@@ -17,6 +17,11 @@ export type AuthUser = {
   photoURL?: string
   locale?: 'en' | 'fr'
   mfaEnabled?: boolean
+  organisations: Membership[]
+  phone?: string | null
+  country?: string | null
+  createdAt?: string
+  hasPassword?: boolean
 }
 
 export type MfaStep = { mfaRequired?: true; mfaSetupRequired?: true; mfaToken: string }
@@ -53,7 +58,12 @@ function toUser(data: any): AuthUser {
     emailVerified: Boolean(data.emailVerified),
     photoURL: data.avatarUrl ?? undefined,
     locale: data.locale,
-    mfaEnabled: Boolean(data.mfaEnabled)
+    mfaEnabled: Boolean(data.mfaEnabled),
+    phone: data.phone ?? null,
+    country: data.country ?? null,
+    createdAt: data.createdAt,
+    hasPassword: data.hasPassword !== false,
+    organisations: state.user?.id === data.id ? state.user?.organisations ?? [] : []
   }
 }
 
@@ -65,11 +75,25 @@ function signedOut() {
 
 function apply(result: { user?: any; accessToken?: string; expiresIn?: number }) {
   if (!result?.accessToken || !result.user) return null
-  state = { user: toUser(result.user), token: result.accessToken, ready: true }
+  state = { user: toUser(result.user), token: result.accessToken, ready: state.ready }
   if (refreshTimer) clearTimeout(refreshTimer)
   refreshTimer = setTimeout(() => void refreshSession(), Math.max(30, (result.expiresIn ?? 900) - 60) * 1000)
+  return state.user
+}
+
+export async function reloadAccount() {
+  if (!state.token) return state.user
+  const response = await fetch('/api/backend/auth/me', { headers: { Authorization: `Bearer ${state.token}` }, credentials: 'same-origin' }).catch(() => null)
+  const data = response?.ok ? await response.json().catch(() => null) : null
+  if (data?.user) state = { ...state, user: { ...toUser(data.user), organisations: data.organisations ?? [] } }
+  state = { ...state, ready: true }
   emit()
   return state.user
+}
+
+async function establish(result: any) {
+  if (!apply(result)) return null
+  return reloadAccount()
 }
 
 async function parse(response: Response) {
@@ -95,7 +119,7 @@ async function session(action: string, body?: unknown) {
 
 export function refreshSession() {
   restoring ??= session('refresh')
-    .then(result => apply(result) ?? (signedOut(), null))
+    .then(async result => (await establish(result)) ?? (signedOut(), null))
     .catch(() => (signedOut(), null))
     .finally(() => {
       restoring = null
@@ -122,22 +146,22 @@ export async function api<T = any>(path: string, init: { method?: string; body?:
 
 type SignInResult = { user: AuthUser } | MfaStep
 
-function signInResult(result: any): SignInResult {
+async function signInResult(result: any): Promise<SignInResult> {
   if (result?.mfaToken) return result as MfaStep
-  return { user: apply(result)! }
+  return { user: (await establish(result))! }
 }
 
-export const signIn = async ({ email, password }: { email: string; password: string }) => signInResult(await session('login', { email: email.trim().toLowerCase(), password }))
+export const signIn = async ({ email, password, remember = true }: { email: string; password: string; remember?: boolean }) => signInResult(await session('login', { email: email.trim().toLowerCase(), password, remember }))
 
 export async function signUp(input: { firstName: string; lastName: string; email: string; password: string; locale?: 'en' | 'fr' }) {
-  const user = apply(await session('register', { ...input, email: input.email.trim().toLowerCase(), firstName: input.firstName.trim(), lastName: input.lastName.trim() }))!
+  const user = (await establish(await session('register', { ...input, email: input.email.trim().toLowerCase(), firstName: input.firstName.trim(), lastName: input.lastName.trim() })))!
   return { user, needsVerification: !user.emailVerified }
 }
 
-export const signInWithGoogle = async (idToken: string) => signInResult(await session('google', { idToken }))
+export const signInWithGoogle = async (idToken: string, remember = true) => signInResult(await session('google', { idToken, remember }))
 
-export async function completeMfa(mfaToken: string, input: { code?: string; recoveryCode?: string }) {
-  return apply(await session('mfa', { mfaToken, ...input }))!
+export async function completeMfa(mfaToken: string, input: { code?: string; recoveryCode?: string }, remember = true) {
+  return (await establish(await session('mfa', { mfaToken, ...input, remember })))!
 }
 
 export async function signOut() {
@@ -156,10 +180,7 @@ export async function requestEmailVerification() {
 
 export async function verifyEmail(token: string) {
   const result = await api<{ user: any }>('/auth/email/verify', { method: 'POST', body: { token } })
-  if (state.user) {
-    state = { ...state, user: toUser(result.user) }
-    emit()
-  }
+  if (state.user) await reloadAccount()
   return result.user
 }
 
@@ -196,6 +217,7 @@ export function useAuth() {
     () => ({
       user: snapshot.user,
       loading: !snapshot.ready,
+      organisations: snapshot.user?.organisations ?? [],
       isSignedIn: Boolean(snapshot.user),
       isDemo: false,
       setRole: updateRole,

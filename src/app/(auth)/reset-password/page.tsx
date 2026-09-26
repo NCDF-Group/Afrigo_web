@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
 import AuthShell from '@/components/auth/AuthShell'
 import { FormAlert, PasswordField } from '@/components/ui/Field'
+import { BusyLabel } from '@/components/ui/Busy'
 import { button } from '@/components/ui/styles'
 import { authErrorMessage, resetPassword } from '@/lib/auth'
 import { useI18n } from '@/i18n/client'
@@ -64,7 +65,7 @@ function ResetForm() {
         <PasswordField label={copy.confirm} name="confirm-password" autoComplete="new-password" required minLength={8} value={confirm} onChange={event => setConfirm(event.target.value)} />
         {error && <FormAlert>{error}</FormAlert>}
         <button type="submit" disabled={busy} className={`${button.primary} min-h-12 w-full text-[15px]`}>
-          {busy ? copy.submitting : copy.submit}
+          <BusyLabel busy={busy} label={copy.submit} busyLabel={copy.submitting} />
         </button>
       </form>
       <p className="mt-8 text-center text-[15px]">

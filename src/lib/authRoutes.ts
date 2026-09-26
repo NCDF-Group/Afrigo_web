@@ -1,7 +1,10 @@
 import type { AuthUser } from './auth'
 
-export function workspaceHref(_user: AuthUser | null) {
-  return '/account'
+export function workspaceHref(user: AuthUser | null) {
+  if (!user) return '/sign-in'
+  if (!user.emailVerified) return '/verify-email'
+  if (!user.organisations.length) return '/app/setup'
+  return '/app'
 }
 
 export function safeNext(value: string | null) {

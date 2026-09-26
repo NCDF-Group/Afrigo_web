@@ -6,13 +6,14 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import AuthShell from '@/components/auth/AuthShell'
 import GoogleSignIn, { googleEnabled } from '@/components/auth/GoogleSignIn'
 import { Field, FormAlert, OrDivider, PasswordField } from '@/components/ui/Field'
+import { BusyLabel } from '@/components/ui/Busy'
 import { button } from '@/components/ui/styles'
 import { authErrorMessage, completeMfa, signIn, signInWithGoogle, useAuth, type AuthUser, type MfaStep } from '@/lib/auth'
 import { safeNext, workspaceHref } from '@/lib/authRoutes'
 import { useActivityTracker } from '@/lib/activityTracker'
 import { useI18n } from '@/i18n/client'
 
-function MfaForm({ step, onDone, onBack }: { step: MfaStep; onDone: (user: AuthUser) => void; onBack: () => void }) {
+function MfaForm({ step, remember, onDone, onBack }: { step: MfaStep; remember: boolean; onDone: (user: AuthUser) => void; onBack: () => void }) {
   const { t } = useI18n()
   const copy = t.auth.mfa
   const [recovery, setRecovery] = useState(false)
@@ -31,7 +32,7 @@ function MfaForm({ step, onDone, onBack }: { step: MfaStep; onDone: (user: AuthU
     setBusy(true)
     setError('')
     try {
-      onDone(await completeMfa(step.mfaToken, recovery ? { recoveryCode: value.trim() } : { code: value.replace(/\s/g, '') }))
+      onDone(await completeMfa(step.mfaToken, recovery ? { recoveryCode: value.trim() } : { code: value.replace(/\s/g, '') }, remember))
     } catch (cause) {
       setError(authErrorMessage(cause, t.errors.auth, t.errors.generic))
       setBusy(false)
@@ -56,7 +57,7 @@ function MfaForm({ step, onDone, onBack }: { step: MfaStep; onDone: (user: AuthU
         />
         {error && <FormAlert>{error}</FormAlert>}
         <button type="submit" disabled={busy} className={`${button.primary} min-h-12 w-full text-[15px]`}>
-          {busy ? copy.submitting : copy.submit}
+          <BusyLabel busy={busy} label={copy.submit} busyLabel={copy.submitting} />
         </button>
       </form>
       <div className="mt-6 flex flex-col items-center gap-3 text-sm">
@@ -78,6 +79,7 @@ function SignInForm() {
   const { user, isSignedIn, loading } = useAuth()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [remember, setRemember] = useState(true)
   const [busy, setBusy] = useState<'' | 'email' | 'google'>('')
   const [error, setError] = useState('')
   const [mfa, setMfa] = useState<MfaStep | null>(null)
@@ -114,7 +116,7 @@ function SignInForm() {
 
   const submit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
-    void handle(signIn({ email, password }), 'email')
+    void handle(signIn({ email, password, remember }), 'email')
   }
 
   const back = () => {
@@ -122,7 +124,7 @@ function SignInForm() {
     setPassword('')
   }
 
-  if (mfa) return <MfaForm step={mfa} onDone={go} onBack={back} />
+  if (mfa) return <MfaForm step={mfa} remember={remember} onDone={go} onBack={back} />
 
   return (
     <>
@@ -132,7 +134,7 @@ function SignInForm() {
       {googleEnabled && (
         <>
           <div className="mt-8">
-            <GoogleSignIn onCredential={idToken => void handle(signInWithGoogle(idToken), 'google')} />
+            <GoogleSignIn onCredential={idToken => void handle(signInWithGoogle(idToken, remember), 'google')} />
           </div>
           <OrDivider />
         </>
@@ -149,9 +151,13 @@ function SignInForm() {
           onChange={event => setPassword(event.target.value)}
           action={<Link href="/forgot-password" className="text-sm font-semibold text-brand-600 hover:underline">{copy.forgot}</Link>}
         />
+        <label className="flex cursor-pointer select-none items-center gap-3 text-sm font-semibold text-ink-700">
+          <input type="checkbox" checked={remember} onChange={event => setRemember(event.target.checked)} className="h-[18px] w-[18px] shrink-0 rounded border-line-strong accent-brand-600" />
+          {copy.remember}
+        </label>
         {error && <FormAlert>{error}</FormAlert>}
         <button type="submit" disabled={!!busy} className={`${button.primary} min-h-12 w-full text-[15px]`}>
-          {busy === 'email' ? copy.submitting : copy.submit}
+          <BusyLabel busy={busy === 'email'} label={copy.submit} busyLabel={copy.submitting} />
         </button>
       </form>
 

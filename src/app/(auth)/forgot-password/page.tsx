@@ -4,6 +4,7 @@ import { useState } from 'react'
 import Link from 'next/link'
 import AuthShell from '@/components/auth/AuthShell'
 import { Field, FormAlert } from '@/components/ui/Field'
+import { BusyLabel } from '@/components/ui/Busy'
 import { button } from '@/components/ui/styles'
 import { authErrorMessage, requestPasswordReset } from '@/lib/auth'
 import { useI18n } from '@/i18n/client'
@@ -51,7 +52,7 @@ export default function ForgotPasswordPage() {
             <Field label={copy.email} type="email" name="email" autoComplete="email" required value={email} onChange={event => setEmail(event.target.value)} placeholder={t.auth.emailPlaceholder} />
             {error && <FormAlert>{error}</FormAlert>}
             <button type="submit" disabled={busy} className={`${button.primary} min-h-12 w-full text-[15px]`}>
-              {busy ? copy.submitting : copy.submit}
+              <BusyLabel busy={busy} label={copy.submit} busyLabel={copy.submitting} />
             </button>
           </form>
           <p className="mt-8 text-center text-[15px] text-ink-500">

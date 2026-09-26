@@ -3,6 +3,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import Logo from '@/components/brand/Logo'
 import { useI18n } from '@/i18n/client'
+import { ThemeScope } from '@/lib/theme'
 
 type Props = {
   image: string
@@ -16,20 +17,21 @@ type Props = {
 export default function AuthShell({ image, caption, captionDetail, children }: Props) {
   const { t } = useI18n()
   return (
-    <div className="flex min-h-[100svh] bg-white lg:flex-row-reverse">
+    <div className="flex min-h-[100svh] bg-surface lg:flex-row-reverse">
+      <ThemeScope />
       <div className="flex w-full flex-col px-4 py-6 sm:px-8 lg:w-1/2 lg:px-12 xl:px-20">
         <div className="flex items-center justify-center">
-          <Logo />
+          <Logo adaptive />
         </div>
         <div className="flex flex-1 items-start justify-center pb-10 pt-12 sm:pt-16 lg:items-center lg:py-10">
           <div className="w-full max-w-[440px]">{children}</div>
         </div>
         <p className="text-center text-xs text-ink-500 lg:text-left">
-          <Link href="/privacy" className="hover:text-brand-600">{t.auth.shell.privacy}</Link>
+          <Link href="/privacy" className="hover:text-brand-600 dark:hover:text-accent-400">{t.auth.shell.privacy}</Link>
           <span aria-hidden="true" className="mx-2">·</span>
-          <Link href="/terms" className="hover:text-brand-600">{t.auth.shell.terms}</Link>
+          <Link href="/terms" className="hover:text-brand-600 dark:hover:text-accent-400">{t.auth.shell.terms}</Link>
           <span aria-hidden="true" className="mx-2">·</span>
-          <Link href="/contact" className="hover:text-brand-600">{t.auth.shell.help}</Link>
+          <Link href="/contact" className="hover:text-brand-600 dark:hover:text-accent-400">{t.auth.shell.help}</Link>
         </p>
       </div>
 

@@ -6,6 +6,7 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import AuthShell from '@/components/auth/AuthShell'
 import GoogleSignIn, { googleEnabled } from '@/components/auth/GoogleSignIn'
 import { Field, FormAlert, OrDivider, PasswordField } from '@/components/ui/Field'
+import { BusyLabel } from '@/components/ui/Busy'
 import { button } from '@/components/ui/styles'
 import { authErrorMessage, signInWithGoogle, signUp } from '@/lib/auth'
 import { safeNext, workspaceHref } from '@/lib/authRoutes'
@@ -100,7 +101,7 @@ function RegisterForm() {
         </label>
         {error && <FormAlert>{error}</FormAlert>}
         <button type="submit" disabled={!!busy} className={`${button.primary} min-h-12 w-full text-[15px]`}>
-          {busy === 'email' ? copy.submitting : copy.submit}
+          <BusyLabel busy={busy === 'email'} label={copy.submit} busyLabel={copy.submitting} />
         </button>
       </form>
 

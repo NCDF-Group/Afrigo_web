@@ -21,7 +21,9 @@ export const fr: Dictionary = {
       resetPassword: { title: 'Choisissez un nouveau mot de passe', description: 'Définissez un nouveau mot de passe Afrigo.' },
       verifyEmail: { title: 'Confirmez votre e-mail', description: 'Confirmez votre adresse e-mail Afrigo.' },
       invitation: { title: 'Rejoignez votre équipe', description: 'Acceptez une invitation à rejoindre une entreprise sur Afrigo.' },
-      account: { title: 'Votre compte', description: 'Votre compte Afrigo.' }
+      account: { title: 'Votre compte', description: 'Votre compte Afrigo.' },
+      setup: { title: 'Configurer votre entreprise', description: 'Créez le profil de votre entreprise sur AfriGoOS.' },
+      workspace: { title: 'Espace de travail', description: 'L’espace de travail de votre entreprise sur AfriGoOS.' }
     }
   },
 
@@ -431,6 +433,7 @@ export const fr: Dictionary = {
       subtitle: 'Connectez-vous pour gérer vos demandes, vos dossiers commerciaux et le profil de votre entreprise.',
       email: 'Adresse e-mail professionnelle',
       password: 'Mot de passe',
+      remember: 'Se souvenir de moi',
       forgot: 'Mot de passe oublié ?',
       submit: 'Se connecter',
       submitting: 'Connexion…',
@@ -543,9 +546,256 @@ export const fr: Dictionary = {
       businessesTitle: 'Vos entreprises',
       noBusiness: 'La prochaine étape est le profil de votre entreprise. Une fois ajouté, vos partenaires commerciaux pourront vous trouver et votre équipe pourra travailler avec vous.',
       roles: { administrator: 'Administrateur', member: 'Membre de l’équipe' },
+      setupBusiness: 'Configurer votre entreprise',
+      openWorkspace: 'Ouvrir votre espace de travail',
       signOut: 'Se déconnecter',
       signOutEverywhere: 'Se déconnecter de tous les appareils',
       signingOut: 'Déconnexion…'
+    }
+  },
+
+  workspace: {
+    checkInbox: {
+      caption: 'Une petite étape avant de commencer à commercer.',
+      captionDetail: 'Confirmer votre e-mail sécurise le compte de votre entreprise.',
+      title: 'Consultez votre boîte de réception, {name}',
+      sentTo: 'Nous avons envoyé un lien de confirmation à',
+      next: 'Ouvrez le lien pour confirmer votre e-mail, puis configurez votre entreprise.',
+      tips: ['L’e-mail provient d’AfriGoOS.', 'Il peut mettre une à deux minutes à arriver.', 'Introuvable ? Vérifiez vos courriers indésirables ou l’onglet Promotions.'],
+      waiting: 'En attente de votre confirmation',
+      confirmed: 'E-mail confirmé. Nous vous emmenons vers la configuration de votre entreprise.',
+      resend: 'Renvoyer l’e-mail',
+      resendIn: 'Renvoyer dans {seconds} s',
+      resent: 'Un nouveau lien est en route. Consultez votre boîte de réception.',
+      wrongEmail: 'Mauvaise adresse e-mail ?',
+      startOver: 'Se déconnecter et s’inscrire à nouveau'
+    },
+    kinds: {
+      business: { title: 'Entreprise commerciale', text: 'Exporter, importer, fabriquer, regrouper ou commercialiser des marchandises.' },
+      service_partner: { title: 'Partenaire de services', text: 'Fournir des services de logistique, d’inspection ou de préparation aux échanges.' }
+    },
+    types: {
+      exporter: { title: 'Exportateur', text: 'Vend des marchandises à l’étranger' },
+      importer: { title: 'Importateur', text: 'Achète des marchandises à l’étranger' },
+      manufacturer: { title: 'Fabricant', text: 'Fabrique ou transforme des marchandises' },
+      cooperative: { title: 'Coopérative', text: 'Un groupement de producteurs détenu par ses membres' },
+      aggregator: { title: 'Agrégateur', text: 'Collecte des produits auprès de nombreux fournisseurs' },
+      trade_service_provider: { title: 'Prestataire de services commerciaux', text: 'Logistique, inspection, financement ou conseil' }
+    },
+    fields: {
+      name: 'Raison sociale',
+      tradingName: 'Nom commercial (facultatif)',
+      country: 'Pays d’immatriculation',
+      countryPlaceholder: 'Choisissez un pays',
+      countryNote: 'AfriGoOS ouvre pays par pays, en commençant par l’Afrique de l’Ouest.',
+      city: 'Ville',
+      registrationNumber: 'Numéro d’immatriculation',
+      registrationHint: 'Par exemple votre numéro RCCM ou du registre du commerce. Nécessaire pour la vérification.',
+      taxId: 'Identifiant fiscal (facultatif)',
+      address: 'Adresse de l’entreprise',
+      phone: 'Téléphone de l’entreprise',
+      email: 'E-mail de l’entreprise',
+      website: 'Site web (facultatif)',
+      description: 'À propos de l’entreprise',
+      descriptionHint: 'Ce que vous commercialisez, où vous opérez et ce qui fait de vous un partenaire fiable.'
+    },
+    verification: {
+      unverified: 'Non vérifiée',
+      pending: 'En cours d’examen',
+      verified: 'Vérifiée',
+      rejected: 'Modifications requises'
+    },
+    roles: { administrator: 'Administrateur', member: 'Membre de l’équipe' },
+    setup: {
+      caption: 'Présentez votre entreprise à de nouveaux marchés africains.',
+      captionDetail: 'Votre profil est la première chose que voient acheteurs, vendeurs et partenaires.',
+      step: 'Étape {current} sur {total}',
+      steps: ['Type d’entreprise', 'Détails', 'Vérification'],
+      kindTitle: 'Quel type d’entreprise êtes-vous ?',
+      kindSubtitle: 'Un même compte peut acheter et vendre.',
+      typesTitle: 'Que fait votre entreprise ?',
+      typesHint: 'Choisissez tout ce qui s’applique.',
+      detailsTitle: 'Parlez-nous de votre entreprise',
+      detailsSubtitle: 'Vos partenaires commerciaux voient ces informations sur votre profil.',
+      reviewTitle: 'Vérifier et créer',
+      reviewSubtitle: 'Vous pourrez modifier ces informations plus tard depuis le profil de votre entreprise.',
+      notProvided: 'Non renseigné',
+      back: 'Retour',
+      next: 'Continuer',
+      create: 'Créer le profil de l’entreprise',
+      creating: 'Création de votre profil…',
+      chooseKind: 'Indiquez si vous êtes une entreprise commerciale ou un partenaire de services.',
+      chooseType: 'Choisissez au moins un type d’activité.',
+      nameRequired: 'Saisissez la raison sociale de votre entreprise.',
+      countryRequired: 'Choisissez le pays où votre entreprise est immatriculée.'
+    },
+    shell: {
+      nav: { home: 'Accueil', business: 'Profil de l’entreprise', team: 'Équipe', account: 'Compte' },
+      theme: { label: 'Apparence', light: 'Clair', dark: 'Sombre', system: 'Système' },
+      menu: 'Menu de l’espace de travail',
+      signOut: 'Se déconnecter'
+    },
+    dashboard: {
+      greeting: { morning: 'Bonjour, {name}', afternoon: 'Bon après-midi, {name}', evening: 'Bonsoir, {name}' },
+      subtitle: 'Voici ce qui se passe chez {business}.',
+      welcome: 'Le profil de votre entreprise est prêt. Voici comment tirer le meilleur parti d’AfriGoOS.',
+      stats: {
+        enquiries: { label: 'Demandes', empty: 'Aucune demande pour le moment' },
+        cases: { label: 'Dossiers commerciaux actifs', empty: 'Aucun dossier ouvert' },
+        tasks: { label: 'Tâches en attente', empty: 'Rien ne vous attend' },
+        notifications: { label: 'Notifications', empty: 'Vous êtes à jour' }
+      },
+      banners: {
+        unverified: { title: 'Faites vérifier votre entreprise', text: 'Les entreprises vérifiées affichent un badge auquel les partenaires font confiance. Ajoutez votre numéro d’immatriculation, puis soumettez-la à l’examen.', action: 'Ouvrir le profil de l’entreprise' },
+        pending: { title: 'Vérification en cours', text: 'L’équipe AfriGoOS examine votre entreprise. Vos administrateurs recevront un e-mail une fois l’examen terminé.' },
+        rejected: { title: 'Votre entreprise nécessite quelques modifications', text: 'Mettez à jour vos informations et soumettez-les à nouveau.', action: 'Revoir les informations' },
+        verified: { title: 'Votre entreprise est vérifiée', text: 'Vos partenaires commerciaux voient votre badge de vérification.' }
+      },
+      checklist: {
+        title: 'Pour commencer',
+        progress: '{done} sur {total} terminées',
+        items: { email: 'Confirmer votre e-mail', profile: 'Créer le profil de votre entreprise', registration: 'Ajouter votre numéro d’immatriculation', verification: 'Soumettre votre entreprise à la vérification', team: 'Inviter un collègue', explore: 'Explorer les opportunités commerciales' }
+      },
+      explore: {
+        title: 'Découvrir AfriGoOS',
+        items: [
+          { href: '/opportunities', title: 'Opportunités commerciales', text: 'Recherchez des produits, des demandes d’achat et des opportunités d’approvisionnement.' },
+          { href: '/market-access', title: 'Accès aux marchés', text: 'Orientations SLE et ZLECAf pour vos routes commerciales.' },
+          { href: '/services', title: 'Services', text: 'Logistique, inspection et préparation aux échanges.' }
+        ]
+      }
+    },
+    business: {
+      title: 'Profil de l’entreprise',
+      subtitle: 'Les informations que vos partenaires voient sur {business}.',
+      edit: 'Modifier',
+      save: 'Enregistrer',
+      saving: 'Enregistrement…',
+      saved: 'Informations de l’entreprise enregistrées.',
+      cancel: 'Annuler',
+      adminOnly: 'Seuls les administrateurs de l’entreprise peuvent modifier ces informations.',
+      identityWarning: 'Modifier la raison sociale, le numéro d’immatriculation, l’identifiant fiscal ou le pays retire le badge de vérification jusqu’à un nouvel examen.',
+      verificationTitle: 'Vérification',
+      submit: 'Soumettre à la vérification',
+      submitting: 'Envoi…',
+      submitted: 'Envoyé. Vos administrateurs recevront un e-mail une fois l’examen terminé.',
+      needsRegistration: 'Ajoutez votre numéro d’immatriculation pour soumettre à la vérification.',
+      reviewNote: 'Note de l’équipe AfriGoOS',
+      kind: 'Type d’entreprise',
+      activities: 'Activités'
+    },
+    account: {
+      title: 'Votre compte',
+      subtitle: 'Vos informations personnelles, votre sécurité et vos préférences.',
+      memberSince: 'Membre depuis le {date}',
+      emailVerified: 'E-mail vérifié',
+      emailNotVerified: 'E-mail non vérifié',
+      mfaOn: 'Vérification en deux étapes activée',
+      mfaOff: 'Vérification en deux étapes désactivée',
+      personal: {
+        title: 'Informations personnelles',
+        firstName: 'Prénom',
+        lastName: 'Nom',
+        email: 'E-mail',
+        emailHint: 'Contactez l’assistance AfriGoOS pour changer l’adresse e-mail de connexion.',
+        phone: 'Numéro de téléphone',
+        country: 'Pays',
+        notSet: 'Non renseigné',
+        language: 'Langue',
+        languages: { en: 'English', fr: 'Français' },
+        edit: 'Modifier',
+        save: 'Enregistrer',
+        saving: 'Enregistrement…',
+        cancel: 'Annuler',
+        saved: 'Vos informations ont été enregistrées.'
+      },
+      businesses: { title: 'Vos entreprises', open: 'Ouvrir', add: 'Ajouter une autre entreprise' },
+      password: {
+        title: 'Mot de passe',
+        text: 'Utilisez un mot de passe robuste que vous n’utilisez nulle part ailleurs.',
+        googleText: 'Vous vous connectez avec Google. Ajoutez un mot de passe pour vous connecter aussi avec votre e-mail.',
+        change: 'Changer le mot de passe',
+        add: 'Ajouter un mot de passe',
+        current: 'Mot de passe actuel',
+        next: 'Nouveau mot de passe',
+        confirm: 'Confirmez le nouveau mot de passe',
+        hint: 'Au moins 8 caractères, dont une lettre et un chiffre.',
+        mismatch: 'Les nouveaux mots de passe ne correspondent pas.',
+        submit: 'Mettre à jour',
+        submitting: 'Mise à jour…',
+        cancel: 'Annuler',
+        done: 'Mot de passe mis à jour. Vos autres appareils ont été déconnectés.'
+      },
+      mfa: {
+        title: 'Vérification en deux étapes',
+        onText: 'À la connexion, nous vous demandons un code de votre application d’authentification.',
+        offText: 'Ajoutez une deuxième étape de connexion avec un code d’une application d’authentification comme Google Authenticator ou Microsoft Authenticator.',
+        enable: 'Activer',
+        starting: 'Préparation…',
+        step1: 'Ajoutez AfriGoOS à votre application d’authentification avec cette clé, ou ouvrez le lien sur votre téléphone.',
+        key: 'Clé de configuration',
+        openApp: 'Ouvrir dans l’application',
+        copy: 'Copier la clé',
+        copied: 'Copiée',
+        step2: 'Saisissez le code à 6 chiffres affiché par l’application.',
+        code: 'Code de vérification',
+        confirm: 'Activer la vérification en deux étapes',
+        confirming: 'Activation…',
+        recoveryTitle: 'Enregistrez vos codes de secours',
+        recoveryText: 'Chaque code ne sert qu’une fois si vous perdez votre téléphone. Conservez-les en lieu sûr. Ils ne seront plus affichés.',
+        saved: 'Je les ai enregistrés',
+        disable: 'Désactiver',
+        disableText: 'Saisissez un code de votre application d’authentification pour désactiver la vérification en deux étapes.',
+        disabling: 'Désactivation…',
+        disabled: 'La vérification en deux étapes est désactivée.',
+        cancel: 'Annuler'
+      },
+      sessions: {
+        title: 'Appareils connectés',
+        subtitle: 'Déconnectez les appareils que vous ne reconnaissez pas.',
+        current: 'Cet appareil',
+        signedIn: 'Connecté le {date}',
+        signOut: 'Déconnecter',
+        signOutAll: 'Se déconnecter de tous les appareils',
+        signingOut: 'Déconnexion…',
+        platforms: { web: 'Navigateur web', ios: 'Application iPhone', android: 'Application Android', admin: 'Console d’administration', unknown: 'Appareil' }
+      },
+      appearance: { title: 'Apparence', text: 'Choisissez l’apparence de votre espace de travail sur cet appareil.' },
+      danger: {
+        title: 'Supprimer le compte',
+        text: 'Supprimez définitivement votre compte et vos informations personnelles. Les entreprises que vous administrez doivent d’abord avoir un autre administrateur.',
+        button: 'Supprimer mon compte',
+        confirmText: 'Cette action est irréversible. Saisissez DELETE et votre mot de passe pour confirmer.',
+        typeDelete: 'Saisissez DELETE pour confirmer',
+        password: 'Mot de passe',
+        confirm: 'Supprimer le compte',
+        deleting: 'Suppression…',
+        cancel: 'Annuler'
+      }
+    },
+    team: {
+      title: 'Équipe',
+      subtitle: 'Les personnes qui peuvent travailler sur les demandes, documents et dossiers commerciaux de {business}.',
+      inviteTitle: 'Inviter un collègue',
+      inviteEmail: 'E-mail professionnel',
+      inviteRole: 'Rôle',
+      invite: 'Envoyer l’invitation',
+      inviting: 'Envoi…',
+      invited: 'Invitation envoyée à {email}.',
+      roleText: { administrator: 'Gère le profil, les collègues et la vérification', member: 'Travaille sur les demandes, documents et dossiers commerciaux' },
+      members: 'Membres',
+      you: 'Vous',
+      pendingTitle: 'Invitations en attente',
+      noPending: 'Aucune invitation en attente.',
+      expires: 'Expire le {date}',
+      cancelInvite: 'Annuler',
+      remove: 'Retirer',
+      leave: 'Quitter',
+      makeAdmin: 'Nommer administrateur',
+      makeMember: 'Nommer membre de l’équipe',
+      confirmRemove: 'Retirer {name} de {business} ?',
+      confirmLeave: 'Quitter {business} ? Vous perdrez l’accès à ses dossiers.',
+      adminOnly: 'Seuls les administrateurs de l’entreprise peuvent inviter ou gérer des collègues.'
     }
   },
 
