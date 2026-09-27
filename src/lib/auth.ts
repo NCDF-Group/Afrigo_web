@@ -127,21 +127,36 @@ export function refreshSession() {
   return restoring
 }
 
-export async function api<T = any>(path: string, init: { method?: string; body?: unknown } = {}, retried = false): Promise<T> {
+type ApiInit = { method?: string; body?: unknown; file?: Blob }
+
+async function send(path: string, init: ApiInit, retried = false): Promise<Response> {
   if (!state.ready) await refreshSession()
+  const headers: Record<string, string> = state.token ? { Authorization: `Bearer ${state.token}` } : {}
+  if (init.file) headers['Content-Type'] = init.file.type || 'application/octet-stream'
+  else if (init.body !== undefined) headers['Content-Type'] = 'application/json'
   const response = await fetch(`/api/backend${path}`, {
     method: init.method ?? 'GET',
-    headers: { ...(state.token ? { Authorization: `Bearer ${state.token}` } : {}), ...(init.body !== undefined ? { 'Content-Type': 'application/json' } : {}) },
-    body: init.body === undefined ? undefined : JSON.stringify(init.body),
+    headers,
+    body: init.file ?? (init.body === undefined ? undefined : JSON.stringify(init.body)),
     credentials: 'same-origin'
   }).catch(() => {
     throw new ApiError('NETWORK', 'Network problem. Check your connection and try again.')
   })
   if (response.status === 401 && state.token && !retried) {
     const user = await refreshSession()
-    if (user) return api<T>(path, init, true)
+    if (user) return send(path, init, true)
   }
-  return parse(response)
+  return response
+}
+
+export async function api<T = any>(path: string, init: ApiInit = {}): Promise<T> {
+  return parse(await send(path, init))
+}
+
+export async function apiBlob(path: string) {
+  const response = await send(path, {})
+  if (!response.ok) await parse(response)
+  return response.blob()
 }
 
 type SignInResult = { user: AuthUser } | MfaStep

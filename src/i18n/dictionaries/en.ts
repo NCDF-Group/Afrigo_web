@@ -671,7 +671,36 @@ export const en = {
       needsRegistration: 'Add your registration number to submit for verification.',
       reviewNote: 'Note from the AfriGoOS team',
       kind: 'Business type',
-      activities: 'Activities'
+      activities: 'Activities',
+      needsDocuments: 'Upload at least one business document to submit for verification.',
+      documents: {
+        title: 'Business documents',
+        text: 'Upload your registration certificate and any supporting documents. Only your team and the AfriGoOS review team can see them.',
+        kindLabel: 'Document type',
+        choose: 'Choose file',
+        upload: 'Upload',
+        uploading: 'Uploading…',
+        uploaded: 'Document uploaded.',
+        hint: 'PDF, PNG or JPG, up to 4 MB.',
+        tooLarge: 'This file is larger than 4 MB. Please upload a smaller copy.',
+        wrongType: 'Upload a PDF, PNG or JPG file.',
+        empty: 'No documents yet. Start with your registration certificate.',
+        view: 'View',
+        remove: 'Remove',
+        removing: 'Removing…',
+        removeConfirm: 'Remove this document?',
+        removed: 'Document removed.',
+        adminOnlyUpload: 'Ask a business administrator to remove approved documents.',
+        status: { pending: 'In review', approved: 'Approved', rejected: 'Needs a new copy' },
+        kinds: {
+          registration_certificate: 'Registration certificate',
+          tax_certificate: 'Tax certificate',
+          director_id: 'Director ID',
+          proof_of_address: 'Proof of address',
+          export_licence: 'Export licence',
+          other: 'Other document'
+        }
+      }
     },
     account: {
       title: 'Your account',

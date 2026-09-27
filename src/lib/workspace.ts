@@ -112,6 +112,19 @@ export const changeMemberRole = (id: string, userId: string, role: Member['role'
 
 export const removeMember = (id: string, userId: string) => api(`/organisations/${id}/members/${userId}`, { method: 'DELETE' }).then(() => reloadAccount())
 
+export const DOCUMENT_KINDS = ['registration_certificate', 'tax_certificate', 'director_id', 'proof_of_address', 'export_licence', 'other'] as const
+
+export type DocumentKind = (typeof DOCUMENT_KINDS)[number]
+
+export type BusinessDocument = { id: string; kind: DocumentKind; fileName: string; mimeType: string; sizeBytes: number; status: 'pending' | 'approved' | 'rejected'; reviewNote: string | null; createdAt: string }
+
+export const listDocuments = (id: string) => api<{ items: BusinessDocument[] }>(`/organisations/${id}/documents`).then(result => result.items)
+
+export const uploadDocument = (id: string, kind: DocumentKind, file: File) =>
+  api<{ document: BusinessDocument }>(`/organisations/${id}/documents?${new URLSearchParams({ kind, fileName: file.name.slice(0, 200) })}`, { method: 'POST', file }).then(result => result.document)
+
+export const deleteDocument = (id: string, documentId: string) => api(`/organisations/${id}/documents/${documentId}`, { method: 'DELETE' })
+
 export function clean<T extends Record<string, unknown>>(input: T) {
   return Object.fromEntries(Object.entries(input).map(([key, value]) => [key, typeof value === 'string' ? value.trim() || null : value])) as T
 }

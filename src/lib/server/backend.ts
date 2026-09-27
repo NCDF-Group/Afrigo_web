@@ -19,13 +19,13 @@ export function sameOrigin(request: Request) {
   }
 }
 
-const unavailable = (): BackendResult => ({ status: 503, data: { error: { code: 'SERVICE_UNAVAILABLE', message: 'Something went wrong. Please try again.' } } })
+export const unavailable = (): BackendResult => ({ status: 503, data: { error: { code: 'SERVICE_UNAVAILABLE', message: 'Something went wrong. Please try again.' } } })
 
-export async function callBackend(request: Request, path: string, init: { method?: string; body?: unknown; token?: string | null; search?: string } = {}): Promise<BackendResult> {
-  if (!API_URL) return unavailable()
+export const backendUrl = (path: string, search = '') => (API_URL ? `${API_URL}/api/v1${path}${search}` : null)
+
+export function backendHeaders(request: Request, token?: string | null) {
   const headers: Record<string, string> = { Accept: 'application/json', 'X-Client-Platform': 'web' }
-  if (init.body !== undefined) headers['Content-Type'] = 'application/json'
-  if (init.token) headers.Authorization = `Bearer ${init.token}`
+  if (token) headers.Authorization = `Bearer ${token}`
   const ip = visitorIp(request)
   if (ip && process.env.BACKEND_PROXY_SECRET) {
     headers['X-Afrigo-Client-Ip'] = ip
@@ -33,8 +33,16 @@ export async function callBackend(request: Request, path: string, init: { method
   }
   const agent = request.headers.get('user-agent')
   if (agent) headers['User-Agent'] = agent.slice(0, 300)
+  return headers
+}
+
+export async function callBackend(request: Request, path: string, init: { method?: string; body?: unknown; token?: string | null; search?: string } = {}): Promise<BackendResult> {
+  const url = backendUrl(path, init.search)
+  if (!url) return unavailable()
+  const headers = backendHeaders(request, init.token)
+  if (init.body !== undefined) headers['Content-Type'] = 'application/json'
   try {
-    const response = await fetch(`${API_URL}/api/v1${path}${init.search ?? ''}`, {
+    const response = await fetch(url, {
       method: init.method ?? 'GET',
       headers,
       body: init.body !== undefined ? JSON.stringify(init.body) : undefined,

@@ -7,6 +7,7 @@ import { BusyLabel } from '@/components/ui/Busy'
 import Skeleton from '@/components/ui/Skeleton'
 import { button } from '@/components/ui/styles'
 import BusinessFields, { formFrom, type BusinessForm } from '@/components/workspace/BusinessFields'
+import Documents from '@/components/workspace/Documents'
 import StatusBadge from '@/components/workspace/StatusBadge'
 import { authErrorMessage } from '@/lib/auth'
 import { clean, countriesOpen, submitVerification, updateOrganisation, useCurrentMembership, useResource, type Country, type Organisation } from '@/lib/workspace'
@@ -26,6 +27,7 @@ export default function BusinessPage() {
   const [busy, setBusy] = useState<'' | 'save' | 'submit'>('')
   const [notice, setNotice] = useState('')
   const [error, setError] = useState('')
+  const [documentCount, setDocumentCount] = useState<number | null>(null)
 
   const business = data?.organisation
   const isAdmin = membership?.role === 'administrator'
@@ -130,15 +132,18 @@ export default function BusinessPage() {
                 <p className="mt-3 text-sm leading-6 text-ink-700"><span className="font-semibold">{copy.reviewNote}:</span> {business.verificationNote}</p>
               )}
               {canSubmit && !business.registrationNumber && <p className="mt-3 text-sm text-ink-500">{copy.needsRegistration}</p>}
+              {canSubmit && documentCount === 0 && <p className="mt-3 text-sm text-ink-500">{copy.needsDocuments}</p>}
             </div>
           </div>
           {canSubmit && (
-            <button type="button" onClick={() => void submit()} disabled={!!busy || !business.registrationNumber} className={`${button.primary} w-full shrink-0 sm:w-auto`}>
+            <button type="button" onClick={() => void submit()} disabled={!!busy || !business.registrationNumber || !documentCount} className={`${button.primary} w-full shrink-0 sm:w-auto`}>
               <BusyLabel busy={busy === 'submit'} label={copy.submit} busyLabel={copy.submitting} />
             </button>
           )}
         </div>
       </section>
+
+      <Documents organisationId={business.id} isAdmin={isAdmin} onCount={setDocumentCount} />
 
       {editing && form ? (
         <form onSubmit={save} className="animate-rise rounded-card border border-line bg-surface p-5 sm:p-6">

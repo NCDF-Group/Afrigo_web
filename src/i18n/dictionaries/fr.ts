@@ -683,7 +683,36 @@ export const fr: Dictionary = {
       needsRegistration: 'Ajoutez votre numéro d’immatriculation pour soumettre à la vérification.',
       reviewNote: 'Note de l’équipe AfriGoOS',
       kind: 'Type d’entreprise',
-      activities: 'Activités'
+      activities: 'Activités',
+      needsDocuments: 'Ajoutez au moins un document de l’entreprise pour soumettre à la vérification.',
+      documents: {
+        title: 'Documents de l’entreprise',
+        text: 'Ajoutez votre certificat d’immatriculation et tout document justificatif. Seuls votre équipe et l’équipe de vérification AfriGoOS peuvent les voir.',
+        kindLabel: 'Type de document',
+        choose: 'Choisir un fichier',
+        upload: 'Envoyer',
+        uploading: 'Envoi…',
+        uploaded: 'Document ajouté.',
+        hint: 'PDF, PNG ou JPG, 4 Mo maximum.',
+        tooLarge: 'Ce fichier dépasse 4 Mo. Veuillez envoyer une copie plus légère.',
+        wrongType: 'Envoyez un fichier PDF, PNG ou JPG.',
+        empty: 'Aucun document pour l’instant. Commencez par votre certificat d’immatriculation.',
+        view: 'Voir',
+        remove: 'Retirer',
+        removing: 'Retrait…',
+        removeConfirm: 'Retirer ce document ?',
+        removed: 'Document retiré.',
+        adminOnlyUpload: 'Demandez à un administrateur de l’entreprise de retirer les documents approuvés.',
+        status: { pending: 'En cours d’examen', approved: 'Approuvé', rejected: 'Nouvelle copie requise' },
+        kinds: {
+          registration_certificate: 'Certificat d’immatriculation',
+          tax_certificate: 'Attestation fiscale',
+          director_id: 'Pièce d’identité du dirigeant',
+          proof_of_address: 'Justificatif d’adresse',
+          export_licence: 'Licence d’exportation',
+          other: 'Autre document'
+        }
+      }
     },
     account: {
       title: 'Votre compte',

@@ -149,12 +149,14 @@ function SignInForm() {
           required
           value={password}
           onChange={event => setPassword(event.target.value)}
-          action={<Link href="/forgot-password" className="text-sm font-semibold text-brand-600 hover:underline">{copy.forgot}</Link>}
         />
-        <label className="flex cursor-pointer select-none items-center gap-3 text-sm font-semibold text-ink-700">
-          <input type="checkbox" checked={remember} onChange={event => setRemember(event.target.checked)} className="h-[18px] w-[18px] shrink-0 rounded border-line-strong accent-brand-600" />
-          {copy.remember}
-        </label>
+        <div className="flex items-center justify-between gap-4">
+          <label className="flex min-h-11 cursor-pointer select-none items-center gap-3 text-sm font-semibold text-ink-700">
+            <input type="checkbox" checked={remember} onChange={event => setRemember(event.target.checked)} className="h-[18px] w-[18px] shrink-0 rounded border-line-strong accent-brand-600" />
+            {copy.remember}
+          </label>
+          <Link href="/forgot-password" className="flex min-h-11 items-center text-sm font-semibold text-brand-600 hover:underline dark:text-accent-400">{copy.forgot}</Link>
+        </div>
         {error && <FormAlert>{error}</FormAlert>}
         <button type="submit" disabled={!!busy} className={`${button.primary} min-h-12 w-full text-[15px]`}>
           <BusyLabel busy={busy === 'email'} label={copy.submit} busyLabel={copy.submitting} />
