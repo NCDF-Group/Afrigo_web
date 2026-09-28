@@ -9,6 +9,11 @@ export function visitorIp(request: Request) {
   return headers.get('x-nf-client-connection-ip') || headers.get('x-forwarded-for')?.split(',')[0]?.trim() || headers.get('x-real-ip') || ''
 }
 
+export function visitorCountry(request: Request) {
+  const code = (request.headers.get('x-vercel-ip-country') || request.headers.get('x-country') || '').trim().toLowerCase()
+  return /^[a-z]{2}$/.test(code) ? code : null
+}
+
 export function sameOrigin(request: Request) {
   const origin = request.headers.get('origin')
   if (!origin) return true

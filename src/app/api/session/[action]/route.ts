@@ -1,6 +1,6 @@
 import { cookies } from 'next/headers'
 import { NextResponse } from 'next/server'
-import { callBackend, sameOrigin, SESSION_COOKIE, type BackendResult } from '@/lib/server/backend'
+import { callBackend, sameOrigin, SESSION_COOKIE, visitorCountry, type BackendResult } from '@/lib/server/backend'
 
 export const dynamic = 'force-dynamic'
 
@@ -51,5 +51,7 @@ export async function POST(request: Request, { params }: { params: Promise<{ act
   const path = ROUTES[action]
   if (!path) return NextResponse.json({ error: { code: 'NOT_FOUND', message: 'Not found.' } }, { status: 404 })
   const { remember, ...body } = await request.json().catch(() => ({}))
-  return respond(await callBackend(request, path, { method: 'POST', body: { ...body, platform: 'web' } }), remember !== false)
+  const country = visitorCountry(request)
+  const signUp = action === 'register' || action === 'google'
+  return respond(await callBackend(request, path, { method: 'POST', body: { ...body, ...(signUp && country && !body.country ? { country } : {}), platform: 'web' } }), remember !== false)
 }
